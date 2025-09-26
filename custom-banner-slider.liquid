@@ -1,0 +1,580 @@
+<style>
+.custom-swiper-section {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+.custom-swiper-slider {
+  overflow: hidden;
+}
+.custom-swiper-slide {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.custom-swiper-media {
+  position: relative;
+}
+.custom-swiper-img,
+.custom-swiper-video {
+  width: 100%;
+  height: {{ section.settings.slider_height }}px;
+  object-fit: cover;
+}
+@media (max-width: 750px) {
+  .custom-swiper-img, .custom-swiper-video {
+    height: {{ section.settings.slider_height_mobile }}px;
+  }
+}
+.custom-swiper-content {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 32px;
+  background: rgba(20,20,20,0.48);
+  color: #fff;
+  border-radius: 12px;
+  padding: 14px 24px 14px 24px;
+  z-index: 2;
+  text-align: center;
+}
+.custom-swiper-heading {
+  font-size: 2.1rem;
+  font-weight: 700;
+}
+.custom-swiper-subheading {
+  font-size: 1.13rem;
+  margin-top: 0.4em;
+}
+.custom-swiper-btn {
+  display: inline-block;
+  margin-top: 1em;
+  padding: 0.6em 1.2em;
+  border-radius: 7px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: #3152d4;
+  transition: background 0.2s;
+}
+.custom-swiper-btn--secondary { 
+  background: #4d4d4d; 
+}
+.custom-swiper-btn--primary { 
+  background: #3152d4; 
+}
+.custom-swiper-btn:hover { 
+  background: #2223b5; 
+}
+.custom-swiper-button {
+  background: #ffffff;
+  border-radius: 50px;
+  border: none;
+  top: 50%;
+  width: 35px;
+  height: 35px;
+}
+.custom-swiper-button svg {
+  width: 15px;
+}
+.custom-swiper-button--prev { 
+  left: 8px; 
+}
+.custom-swiper-button--prev svg {
+  transform: rotate(180deg);
+}
+.custom-swiper-button--next { 
+  right: 8px; 
+}
+.custom-swiper-button::before, .custom-swiper-button::after{
+  content: none;
+}
+.custom-swiper-pagination {
+  margin-top: 30px;
+  text-align: center;
+}
+.custom-swiper-pagination .swiper-pagination-bullet {
+  border: 2px solid rgb(255, 255, 255);
+  height: 10px;
+  width: 10px;
+  background: transparent;
+  opacity: 1;
+  transition: 0.4s;
+  cursor: pointer;
+}
+.custom-swiper-pagination .swiper-pagination-bullet-active {
+  background:rgb(255, 255, 255);
+  width: 30px;
+  border-radius: 15px;
+}
+.absolute_zigzag-image{
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  left: 0;
+  z-index: 2;
+}
+</style>
+
+<section class="custom-swiper-section" id="custom-swiper-{{ section.id }}">
+  <img class="absolute_zigzag-image" src="https://cdn.shopify.com/s/files/1/0904/7523/3658/files/zigzag-1_1.png" width="auto" height="auto" />
+  <div class="custom-swiper-wrapper">
+    <div 
+        class="swiper custom-swiper-slider" 
+        id="customSwiper-{{ section.id }}" 
+        data-loop="{{ section.settings.loop }}"
+        data-autoplay="{{ section.settings.autoplay }}"
+        data-autoplay-speed="{{ section.settings.autoplay_speed }}"
+        data-direction="{{ section.settings.direction }}"
+        data-effect="{{ section.settings.effect }}"
+        data-speed="{{ section.settings.speed }}"
+        data-slides-per-view="{{ section.settings.slides_per_view }}"
+        data-space-between="{{ section.settings.space_between }}"
+        data-show-pagination="{{ section.settings.show_pagination }}"
+        data-show-navigation="{{ section.settings.show_navigation }}"
+    >
+      <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+          <div class="swiper-slide custom-swiper-slide">
+            <div class="custom-swiper-media">
+              {% if block.type == 'image_slide' and block.settings.image != blank %}
+                <img 
+                  src="{{ block.settings.image | image_url: width: 1500 }}"
+                  alt="{{ block.settings.heading | escape }}"
+                  class="custom-swiper-img"
+                  loading="lazy"
+                  width="auto"
+                  height="auto"
+                >
+              {% elsif block.type == 'video_slide' and block.settings.video_url != blank or block.settings.video != blank %}
+                  {% if block.settings.video != blank %}
+                    {% assign video_url  = block.settings.video.sources[1].url %}
+                  {% else %}
+                     {% assign video_url  = block.settings.video_url %}
+                  {% endif %}
+                  <video class="custom-swiper-video"
+                        src="{{ video_url }}"
+                        controls
+                        loop
+                        muted
+                        {% if block.settings.autoplay_video %}autoplay{% endif %}></video>
+              {% endif %}
+            </div>
+            {% if block.settings.heading != blank or block.settings.subheading != blank or block.settings.button_label != blank %}
+              <div class="custom-swiper-content text-{{ block.settings.text_align }}">
+                {% if block.settings.heading != blank %}
+                  <h2 class="custom-swiper-heading {{ block.settings.heading_size }}">
+                    {{ block.settings.heading }}
+                  </h2>
+                {% endif %}
+                {% if block.settings.subheading != blank %}
+                  <div class="custom-swiper-subheading">{{ block.settings.subheading }}</div>
+                {% endif %}
+                {% if block.settings.button_label != blank %}
+                  <a href="{{ block.settings.button_link }}"
+                    class="custom-swiper-btn{% if block.settings.secondary_button %} custom-swiper-btn--secondary{% else %} custom-swiper-btn--primary{% endif %}">
+                    {{ block.settings.button_label | escape }}
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      {% if section.settings.show_navigation %}
+        <div class="swiper-button-prev custom-swiper-button custom-swiper-button--prev">
+          <svg width="30px" height="30px" viewBox="-5 0 23 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <title>left</title>
+            <desc>Created with Sketch.</desc>
+            <g id="icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="ui-gambling-website-lined-icnos-casinoshunter" transform="translate(-1783.000000, -158.000000)" fill="#1C1C1F" fill-rule="nonzero">
+                <g id="1" transform="translate(1350.000000, 120.000000)">
+                  <path d="M436.453517,38.569249 L447.302459,48.9938158 L447.39261,49.0748802 C447.75534,49.423454 447.968159,49.8870461 448,50.4382227 L447.998135,50.6228229 C447.968159,51.1129539 447.75534,51.576546 447.333675,51.9774469 L447.339095,51.9689832 L436.453517,62.430751 C435.663694,63.1897497 434.399001,63.1897497 433.609178,62.430751 C432.796941,61.650213 432.796941,60.3675924 433.609432,59.5868106 L443.012324,50.5572471 L433.609178,41.4129456 C432.796941,40.6324076 432.796941,39.349787 433.609178,38.569249 C434.399001,37.8102503 435.663694,37.8102503 436.453517,38.569249 Z" id="right"></path>
+                </g>
+              </g>
+            </g>
+        </svg>
+        </div>
+        <div class="swiper-button-next custom-swiper-button custom-swiper-button--next">
+          <svg width="30px" height="30px" viewBox="-5 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <title>right</title>
+            <desc>Created with Sketch.</desc>
+            <g id="icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="ui-gambling-website-lined-icnos-casinoshunter" transform="translate(-1783.000000, -158.000000)" fill="#1C1C1F" fill-rule="nonzero">
+                <g id="1" transform="translate(1350.000000, 120.000000)">
+                  <path d="M436.453517,38.569249 L447.302459,48.9938158 L447.39261,49.0748802 C447.75534,49.423454 447.968159,49.8870461 448,50.4382227 L447.998135,50.6228229 C447.968159,51.1129539 447.75534,51.576546 447.333675,51.9774469 L447.339095,51.9689832 L436.453517,62.430751 C435.663694,63.1897497 434.399001,63.1897497 433.609178,62.430751 C432.796941,61.650213 432.796941,60.3675924 433.609432,59.5868106 L443.012324,50.5572471 L433.609178,41.4129456 C432.796941,40.6324076 432.796941,39.349787 433.609178,38.569249 C434.399001,37.8102503 435.663694,37.8102503 436.453517,38.569249 Z" id="right"></path>
+                </g>
+              </g>
+            </g>
+        </svg>
+        </div>
+      {% endif %}
+    </div>
+    {% if section.settings.show_pagination %}
+      <div class="swiper-pagination custom-swiper-pagination"></div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    var $el = document.getElementById("customSwiper-{{ section.id }}");
+    if (!$el) return;
+    var options = {
+        loop: $el.getAttribute("data-loop") === "true",
+        direction: $el.getAttribute("data-direction") || "horizontal",
+        effect: $el.getAttribute("data-effect") || "slide",
+        speed: parseInt($el.getAttribute("data-speed")) || 600,
+        slidesPerView: parseInt($el.getAttribute("data-slides-per-view")) || 1,
+        spaceBetween: parseInt($el.getAttribute("data-space-between")) || 0
+    };
+    if ($el.getAttribute("data-autoplay") === "true") {
+        options.autoplay = {
+        delay: parseInt($el.getAttribute("data-autoplay-speed")) || 4000,
+        disableOnInteraction: false
+        };
+    }
+    if ($el.getAttribute("data-show-pagination") === "true") {
+        options.pagination = {
+        el: ".custom-swiper-pagination",
+        clickable: true
+        };
+    }
+    if ($el.getAttribute("data-show-navigation") === "true") {
+        options.navigation = {
+        nextEl: ".custom-swiper-button--next",
+        prevEl: ".custom-swiper-button--prev"
+        };
+    }
+    new Swiper("#customSwiper-{{ section.id }}", options);
+    });
+</script>
+
+{% schema %}
+{
+   "name":"Custom Slider",
+   "tag":"section",
+   "class":"custom-swiper-section",
+   "settings":[
+      {
+        "type":"checkbox",
+        "id":"autoplay",
+        "label":"Enable Autoplay",
+        "default":true
+      },
+      {
+        "type":"range",
+        "id":"autoplay_speed",
+        "label":"Autoplay Speed (ms)",
+        "min":200,
+        "max":2000,
+        "step":100,
+        "default":1000
+      },
+      {
+        "type":"checkbox",
+        "id":"loop",
+        "label":"Enable Looping",
+        "default":true
+      },
+      {
+        "type":"select",
+        "id":"direction",
+        "label":"Slider Direction",
+        "options":[
+        {
+            "value":"horizontal",
+            "label":"Horizontal"
+        },
+        {
+            "value":"vertical",
+            "label":"Vertical"
+        }
+        ],
+        "default":"horizontal"
+      },
+      {
+        "type":"select",
+        "id":"effect",
+        "label":"Transition Effect",
+        "options":[
+        {
+            "value":"slide",
+            "label":"Slide"
+        },
+        {
+            "value":"fade",
+            "label":"Fade"
+        },
+        {
+            "value":"cube",
+            "label":"Cube"
+        },
+        {
+            "value":"coverflow",
+            "label":"Coverflow"
+        }
+        ],
+        "default":"slide"
+      },
+      {
+        "type":"range",
+        "id":"speed",
+        "label":"Transition Speed (ms)",
+        "min":300,
+        "max":2000,
+        "step":100,
+        "default":600
+      },
+      {
+        "type":"range",
+        "id":"slides_per_view",
+        "label":"Slides Per View",
+        "min":1,
+        "max":4,
+        "step":1,
+        "default":1
+      },
+      {
+        "type":"range",
+        "id":"space_between",
+        "label":"Space Between Slides (px)",
+        "min":0,
+        "max":50,
+        "step":2,
+        "default":0
+      },
+      {
+        "type":"checkbox",
+        "id":"show_pagination",
+        "label":"Show Pagination (Dots)",
+        "default":true
+      },
+      {
+        "type":"checkbox",
+        "id":"show_navigation",
+        "label":"Show Arrows",
+        "default":true
+      },
+      {
+        "type":"range",
+        "id":"slider_height",
+        "label":"Slider Height (Desktop px)",
+        "min":200,
+        "max":1000,
+        "step":10,
+        "default":400
+      },
+      {
+        "type":"range",
+        "id":"slider_height_mobile",
+        "label":"Slider Height (Mobile px)",
+        "min":120,
+        "max":650,
+        "step":10,
+        "default":200
+      },
+      {
+        "type": "header",
+        "content": "Container Position"
+      },
+      {
+        "type": "select",
+        "id": "container_alignment",
+        "label": "Container Alignment",
+        "default": "middle-center",
+        "options": [
+          { "value": "top-left", "label": "Top Left" },
+          { "value": "top-center", "label": "Top Center" },
+          { "value": "top-right", "label": "Top Right" },
+          { "value": "middle-left", "label": "Middle Left" },
+          { "value": "middle-center", "label": "Middle Center" },
+          { "value": "middle-right", "label": "Middle Right" },
+          { "value": "bottom-left", "label": "Bottom Left" },
+          { "value": "bottom-center", "label": "Bottom Center" },
+          { "value": "bottom-right", "label": "Bottom Right" }
+        ]
+      }
+   ],
+   "blocks":[
+      {
+        "type":"image_slide",
+        "name":"Image Slide",
+        "settings":[
+            {
+                "type":"image_picker",
+                "id":"image",
+                "label":"Image"
+            },
+            {
+                "type":"inline_richtext",
+                "id":"heading",
+                "label":"Heading"
+            },
+            {
+                "type":"text",
+                "id":"subheading",
+                "label":"Subheading"
+            },
+            {
+                "type":"text",
+                "id":"button_label",
+                "label":"Button Label"
+            },
+            {
+                "type":"url",
+                "id":"button_link",
+                "label":"Button Link"
+            },
+            {
+                "type":"checkbox",
+                "id":"secondary_button",
+                "label":"Use secondary button",
+                "default":false
+            },
+            {
+                "type":"select",
+                "id":"heading_size",
+                "label":"Heading size",
+                "options":[
+                    {
+                        "value":"h1",
+                        "label":"H1"
+                    },
+                    {
+                        "value":"h2",
+                        "label":"H2"
+                    },
+                    {
+                        "value":"hxl",
+                        "label":"XL"
+                    }
+                ],
+                "default":"h2"
+            },
+            {
+                "type":"select",
+                "id":"text_align",
+                "label":"Text Alignment",
+                "options":[
+                    {
+                        "value":"left",
+                        "label":"Left"
+                    },
+                    {
+                        "value":"center",
+                        "label":"Center"
+                    },
+                    {
+                        "value":"right",
+                        "label":"Right"
+                    }
+                ],
+                "default":"center"
+            }
+        ]
+      },
+      {
+        "type":"video_slide",
+        "name":"Video Slide",
+        "settings":[
+            {
+                "type":"url",
+                "id":"video_url",
+                "label":"Video MP4 URL"
+            },
+            {
+              "type": "video",
+              "id": "video",
+              "label": "Choose Video"
+            },
+            {
+                "type":"checkbox",
+                "id":"autoplay_video",
+                "label":"Autoplay Video",
+                "default":true
+            },
+            {
+                "type":"inline_richtext",
+                "id":"heading",
+                "label":"Heading"
+            },
+            {
+                "type":"text",
+                "id":"subheading",
+                "label":"Subheading"
+            },
+            {
+                "type":"text",
+                "id":"button_label",
+                "label":"Button Label"
+            },
+            {
+                "type":"url",
+                "id":"button_link",
+                "label":"Button Link"
+            },
+            {
+                "type":"checkbox",
+                "id":"secondary_button",
+                "label":"Use secondary button",
+                "default":false
+            },
+            {
+                "type":"select",
+                "id":"heading_size",
+                "label":"Heading size",
+                "options":[
+                    {
+                        "value":"h1",
+                        "label":"H1"
+                    },
+                    {
+                        "value":"h2",
+                        "label":"H2"
+                    },
+                    {
+                        "value":"hxl",
+                        "label":"XL"
+                    }
+                ],
+                "default":"h2"
+            },
+            {
+                "type":"select",
+                "id":"text_align",
+                "label":"Text Alignment",
+                "options":[
+                    {
+                        "value":"left",
+                        "label":"Left"
+                    },
+                    {
+                        "value":"center",
+                        "label":"Center"
+                    },
+                    {
+                        "value":"right",
+                        "label":"Right"
+                    }
+                ],
+                "default":"center"
+            }
+        ]
+      }
+   ],
+   "presets":[
+      {
+        "name":"Custom Slider",
+        "blocks":[
+            {
+                "type":"image_slide"
+            },
+            {
+                "type":"video_slide"
+            }
+        ]
+      }
+   ]
+}
+{% endschema %}

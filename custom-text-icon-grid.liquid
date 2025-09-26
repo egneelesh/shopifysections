@@ -1,0 +1,586 @@
+<style>
+  .section-{{ section.id }} {
+    padding: {{ section.settings.padding_top }}px {{ section.settings.padding_right }}px {{ section.settings.padding_bottom }}px {{ section.settings.padding_left }}px;
+    background-color: {{ section.settings.background_color }};
+    font-family: {{ section.settings.font_family }};
+  }
+  
+  .quality-header {
+    text-align: {{ section.settings.header_alignment }};
+    margin-bottom: {{ section.settings.header_spacing }}px;
+  }
+  
+  .quality-title {
+    font-size: {{ section.settings.title_font_size }}px;
+    color: {{ section.settings.title_color }};
+    margin-bottom: 15px;
+    font-weight: {{ section.settings.title_font_weight }};
+  }
+  
+  .quality-subtitle {
+    font-size: {{ section.settings.subtitle_font_size }}px;
+    color: {{ section.settings.subtitle_color }};
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  
+  .quality-features {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: {{ section.settings.feature_spacing }}px;
+  }
+  
+  @media (max-width: 989px) {
+    .quality-features {
+      grid-template-columns: repeat({{ section.settings.columns_tablet }}, 1fr);
+    }
+  }
+  
+  @media (max-width: 749px) {
+    .quality-features {
+      grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+    }
+  }
+  
+  .quality-feature {
+    background: {{ section.settings.card_background }};
+    border-radius: {{ section.settings.card_border_radius }}px;
+    padding: {{ section.settings.card_padding }}px;
+    box-shadow: {{ section.settings.card_shadow }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: {{ section.settings.feature_alignment }};
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .feature-icon {
+    flex-shrink: 0;
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+    background-color: {{ section.settings.icon_background }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+  .feature-icon img {
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+  }
+  
+  .feature-content {
+    flex: 1;
+  }
+  
+  .feature-title {
+    font-size: {{ section.settings.feature_title_size }}px;
+    color: {{ section.settings.feature_title_color }};
+    margin-bottom: 10px;
+    font-weight: {{ section.settings.feature_title_weight }};
+  }
+  
+  .feature-description {
+    color: {{ section.settings.feature_text_color }};
+    line-height: 1.6;
+    font-size: {{ section.settings.feature_text_size }}px;
+    margin: 0;
+  }
+  
+  .highlight {
+    background-color: {{ section.settings.highlight_color }};
+    color: white;
+  }
+  
+  .highlight .feature-icon {
+    background-color: rgba(255,255,255,0.2);
+  }
+  
+  .highlight .feature-title,
+  .highlight .feature-description {
+    color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .quality-title {
+      font-size: calc({{ section.settings.title_font_size }}px * 0.8);
+    }
+    
+    .quality-subtitle {
+      font-size: calc({{ section.settings.subtitle_font_size }}px * 0.9);
+    }
+    
+    .quality-feature {
+      padding: 20px;
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .feature-icon {
+      margin: 0 auto 15px;
+    }
+  }
+</style>
+
+<section class="section-{{ section.id }}">
+  <div class="page-width">
+    <div class="quality-header">
+      <h2 class="quality-title">{{ section.settings.title }}</h2>
+      {% if section.settings.subtitle != blank %}
+        <p class="quality-subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+    
+    <div class="quality-features">
+      {% for block in section.blocks %}
+        <div class="quality-feature {% if block.settings.highlight %}highlight{% endif %}" {{ block.shopify_attributes }}>
+          {% if block.settings.icon_image != blank %}
+            <div class="feature-icon">
+              <img 
+                src="{{ block.settings.icon_image | image_url: width: 1000 }}" 
+                alt="{{ block.settings.title | escape }}"
+                loading="lazy"
+                width="auto"
+                height="auto"
+              >
+            </div>
+          {% endif %}
+          
+          <div class="feature-content">
+            <h3 class="feature-title">{{ block.settings.title }}</h3>
+            <p class="feature-description">{{ block.settings.description }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Quality Assurance",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#2c3e50"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Font Size",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Title Font Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#7f8c8d"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Font Size",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Header Spacing",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Left",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Right",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Columns on Desktop",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Columns on Tablet",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Columns on Mobile",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "feature_spacing",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Feature Spacing",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Card Padding",
+      "default": 30
+    },
+    {
+      "type": "text",
+      "id": "card_shadow",
+      "label": "Card Shadow",
+      "default": "0 5px 15px rgba(0,0,0,0.05)"
+    },
+    {
+      "type": "select",
+      "id": "feature_alignment",
+      "label": "Feature Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 40,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon Size",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "icon_background",
+      "label": "Icon Background",
+      "default": "#e8f4fc"
+    },
+    {
+      "type": "color",
+      "id": "feature_title_color",
+      "label": "Feature Title Color",
+      "default": "#2c3e50"
+    },
+    {
+      "type": "range",
+      "id": "feature_title_size",
+      "min": 16,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Feature Title Size",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "feature_title_weight",
+      "label": "Feature Title Weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "feature_text_color",
+      "label": "Feature Text Color",
+      "default": "#7f8c8d"
+    },
+    {
+      "type": "range",
+      "id": "feature_text_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Feature Text Size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Highlight Color",
+      "default": "#3498db"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image",
+          "info": "Upload a square icon image (recommended: 100x100px)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Feature description goes here."
+        },
+        {
+          "type": "checkbox", 
+          "id": "highlight",
+          "label": "Highlight this feature",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quality Assurance",
+      "category": "Custom Sections",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "What is Lorem Ipsum?",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "What is Lorem Ipsum?",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "What is Lorem Ipsum?",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "What is Lorem Ipsum?",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+            "highlight": true
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "What is Lorem Ipsum?",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "What is Lorem Ipsum?",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "What is Lorem Ipsum?",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "What is Lorem Ipsum?",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "What is Lorem Ipsum?",
+            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

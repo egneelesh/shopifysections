@@ -1,0 +1,291 @@
+<style>
+.cst-category-section {
+  padding: 60px 20px;
+  background: #fff;
+  text-align: center;
+}
+.cst-heading {
+  font-size: 3.75rem;
+  font-weight: bold;
+}
+.cst-subheading {
+  max-width: 640px;
+  margin: 0 auto 40px;
+  color: #6b7280;
+}
+.cst-category-grid {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(var(--cst-cols-desktop), 1fr);
+}
+{% comment %} span.highlight-text {
+    background: linear-gradient(135deg, hsl(280 85% 55%), hsl(320 75% 60%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+} {% endcomment %}
+@media (max-width: 992px) {
+  .cst-category-grid {
+    grid-template-columns: repeat(var(--cst-cols-tablet), 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .cst-category-grid {
+    grid-template-columns: repeat(var(--cst-cols-mobile), 1fr);
+  }
+}
+.cst-category-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  display: block;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+.cst-category-card:hover {
+  transform: translateY(-5px);
+}
+.cst-category-image {
+  width: 100%;
+  height: 350px;
+  margin: 0;
+  object-fit: cover;
+}
+.cst-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+.cst-title {
+  margin: 0;
+  font-weight: 600;
+}
+.cst-subtitle {
+  margin-top: 4px;
+  font-size: 0.9rem;
+}
+.cst-card-icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: white;
+  padding: 6px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+  width: 35px;
+  height: 35px;
+}
+.cst-cta-wrapper {
+  margin-top: 40px;
+}
+.cst-view-all-btn {
+  padding: 12px 28px;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.cst-view-all-btn:hover {
+    color: #fff;
+}
+</style>
+<section class="cst-category-section">
+  <div class="cst-page {{ section.settings.page_width }}">
+    <h2 class="cst-heading">{{ section.settings.heading }} <span class="highlight-text">{{ section.settings.highlight_title }}</span></h2>
+    <p class="cst-subheading">{{ section.settings.subheading }}</p>
+
+    <div
+      class="cst-category-grid"
+      style="
+        --cst-cols-desktop: {{ section.settings.items_per_row_desktop }};
+        --cst-cols-tablet: {{ section.settings.items_per_row_tablet }};
+        --cst-cols-mobile: {{ section.settings.items_per_row_mobile }};
+      "
+    >
+      {% for block in section.blocks %}
+        {% assign s = block.settings %}
+        <a href="{{ s.link }}" class="cst-category-card">
+          {% if s.image %}
+            <img src="{{ s.image | image_url: width: 800 }}" class="cst-category-image" alt="{{ s.title }}">
+          {% endif %}
+
+          {% if s.icon %}
+            <div class="cst-card-icon">
+              <img src="{{ s.icon | image_url: width: 50 }}" alt="Icon" />
+            </div>
+          {% endif %}
+
+          <div class="cst-card-overlay" style="text-align: {{ s.text_align }};">
+            <h3 class="cst-title" style="color: {{ s.text_color }}; font-size: {{ s.font_size }}px;">
+              {{ s.title }}
+            </h3>
+            <p class="cst-subtitle" style="color: {{ s.text_color }};">{{ s.subtitle }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.cta_link %}
+      <div class="cst-cta-wrapper">
+        <a href="{{ section.settings.cta_link }}" class="cst-view-all-btn button-gradient-bg">
+          {{ section.settings.cta_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Shop by Category",
+  "settings": [
+    {
+        "type": "select",
+        "id": "page_width",
+        "label": "Section Type",
+        "options": [
+            {
+            "value": "container",
+            "label": "Container"
+            },
+            {
+            "value": "full",
+            "label": "Full"
+            }
+        ],
+        "default": "container"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main Heading",
+      "default": "Shop by Category"
+    },
+    {
+        "type": "text",
+        "id": "highlight_title",
+        "label": "Highlight Text"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover curated collections of premium artwork and frames"
+    },
+    {
+      "type": "range",
+      "id": "items_per_row_desktop",
+      "label": "Items per Row (Desktop)",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "items_per_row_tablet",
+      "label": "Items per Row (Tablet)",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+        "type": "select",
+        "id": "items_per_row_mobile",
+        "label": "Items per Row (Mobile)",
+        "options": [
+            {
+            "value": "1",
+            "label": "1"
+            },
+            {
+            "value": "2",
+            "label": "2"
+            }
+        ],
+        "default": "1"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "View All Link"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "View All Button Label",
+      "default": "View All Categories →"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Category Title"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Short description"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Card Link"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Title Font Size (px)",
+          "min": 12,
+          "max": 40,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Text Alignment",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Top-Right Icon"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by Category (Custom)"
+    }
+  ]
+}
+{% endschema %}
+
+

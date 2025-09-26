@@ -1,0 +1,724 @@
+<style>
+.image-text-zigzag {
+  position: relative;
+  background: {{ section.settings.background_color }};
+  {% if section.settings.background_image %}
+    background-image: url({{ section.settings.background_image | image_url }});
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  {% endif %}
+  padding: {{ section.settings.section_padding_top }}px {{ section.settings.section_padding_sides }}px {{ section.settings.section_padding_bottom }}px;
+}
+
+.image-text-zigzag .zigzag {
+  width: 100%;
+  height: {{ section.settings.zigzag_height }}px;
+  background-color: {{ section.settings.zigzag_color }};
+  overflow: hidden;
+}
+
+.image-text-zigzag .zigzag img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-text-zigzag .container {
+  display: flex;
+  flex-direction: {% if section.settings.image_position == "left" %}row{% else %}row-reverse{% endif %};
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: {{ section.settings.content_gap }}px;
+  padding: {{ section.settings.container_padding_top }}px {{ section.settings.container_padding_sides }}px {{ section.settings.container_padding_bottom }}px;
+}
+
+.image-text-zigzag .container .cst-txt-wrap {
+  flex: 1;
+  min-width: 300px;
+  padding: {{ section.settings.text_padding }}px;
+  text-align: {{ section.settings.text_alignment }};
+}
+
+.image-text-zigzag .container .cst-txt-wrap h2 {
+  font-size: {{ section.settings.heading_font_size }}px;
+  font-weight: {{ section.settings.heading_font_weight }};
+  color: {{ section.settings.heading_color }};
+  margin-bottom: {{ section.settings.heading_margin_bottom }}px;
+  line-height: 1.2;
+}
+
+.image-text-zigzag .container .cst-txt-wrap p {
+  font-size: {{ section.settings.text_font_size }}px;
+  line-height: {{ section.settings.text_line_height }};
+  color: {{ section.settings.text_color }};
+  margin-bottom: {{ section.settings.text_margin_bottom }}px;
+}
+
+.image-text-zigzag .container .cst-txt-wrap a.link-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background-color: {{ section.settings.button_background_color }};
+  color: {{ section.settings.button_text_color }};
+  padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;
+  border-radius: {{ section.settings.button_border_radius }}px;
+  font-weight: {{ section.settings.button_font_weight }};
+  font-size: {{ section.settings.button_font_size }}px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: {{ section.settings.button_border_width }}px solid {{ section.settings.button_border_color }};
+}
+
+.image-text-zigzag .container .cst-txt-wrap a.link-button:hover {
+  background-color: {{ section.settings.button_hover_background_color }};
+  color: {{ section.settings.button_hover_text_color }};
+  border-color: {{ section.settings.button_hover_border_color }};
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.image-text-zigzag .container .cst-img-wrap {
+  flex: {{  section.settings.image_area_width }};
+  min-width: 300px;
+  padding: {{ section.settings.image_padding }}px;
+  text-align: center;
+}
+
+.image-text-zigzag .container .cst-img-wrap img {
+  width: {{ section.settings.image_width }}%;
+  object-fit: {{ section.settings.image_fit }};
+  border: {{ section.settings.image_border_width }}px solid {{ section.settings.image_border_color }};
+  border-radius: {{ section.settings.image_border_radius }}px;
+  box-shadow: {{ section.settings.image_shadow_horizontal }}px {{ section.settings.image_shadow_vertical }}px {{ section.settings.image_shadow_blur }}px {{ section.settings.image_shadow_color }};
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .image-text-zigzag .container {
+    flex-direction: column;
+    padding: {{ section.settings.container_padding_top_mobile }}px {{ section.settings.container_padding_sides_mobile }}px {{ section.settings.container_padding_bottom_mobile }}px;
+  }
+    
+  .image-text-zigzag .container .cst-txt-wrap {
+    text-align: center;
+  }
+  
+  .image-text-zigzag .container .cst-txt-wrap h2 {
+    font-size: calc({{ section.settings.heading_font_size }}px * 0.8);
+  }
+  
+  .image-text-zigzag .container .cst-txt-wrap p {
+    font-size: calc({{ section.settings.text_font_size }}px * 0.9);
+  }
+  
+  .image-text-zigzag .container .cst-img-wrap img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-text-zigzag {
+    padding: {{ section.settings.section_padding_top_mobile }}px {{ section.settings.section_padding_sides_mobile }}px {{ section.settings.section_padding_bottom_mobile }}px;
+  }
+  
+  .image-text-zigzag .container .cst-txt-wrap h2 {
+    font-size: calc({{ section.settings.heading_font_size }}px * 0.7);
+  }
+  
+  .image-text-zigzag .container .cst-txt-wrap p {
+    font-size: calc({{ section.settings.text_font_size }}px * 0.8);
+  }
+  
+  .image-text-zigzag .container .cst-txt-wrap a.link-button {
+    padding: calc({{ section.settings.button_padding_vertical }}px * 0.8) calc({{ section.settings.button_padding_horizontal }}px * 0.8);
+    font-size: calc({{ section.settings.button_font_size }}px * 0.9);
+  }
+}
+</style>
+
+{% if section.settings.top_zigzag != blank %}
+  <div class="zigzag top">
+    <img src="{{ section.settings.top_zigzag | image_url }}" alt="Top Zigzag" width="auto" height="auto" />
+  </div>
+{% endif %}
+
+<div class="image-text-zigzag">
+  <div class="container page-width">
+    {% for block in section.blocks %}
+      {% if block.type == 'image' %}
+        <div class="cst-img-wrap">
+          <img 
+            src="{{ block.settings.main_image | image_url: width: 400 }}" 
+            alt="{{ block.settings.image_alt }}" 
+            loading="lazy"
+            width="auto"
+            height="auto"
+          />
+        </div>
+      {% elsif block.type == 'text' %}
+        <div class="cst-txt-wrap">
+          {% if block.settings.heading != blank %}
+            <h2>{{ block.settings.heading }}</h2>
+          {% endif %}
+          {% if block.settings.text != blank %}
+            <p>{{ block.settings.text }}</p>
+          {% endif %}
+          {% if block.settings.button_link != blank %}
+            <a class="link-button" href="{{ block.settings.button_link }}">
+                {{ block.settings.button_label }}
+                {% if  block.settings.button_icon %}
+                {{  block.settings.button_icon }}
+                {% endif %}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% if section.settings.bottom_zigzag != blank %}
+  <div class="zigzag bottom">
+    <img src="{{ section.settings.bottom_zigzag | image_url }}" alt="Bottom Zigzag" width="auto" height="auto" />
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Image Text with Zigzag",
+  "tag": "section",
+  "class": "image-text-zigzag",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Zigzag Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "top_zigzag",
+      "label": "Top Zigzag Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bottom_zigzag",
+      "label": "Bottom Zigzag Image"
+    },
+    {
+      "type": "range",
+      "id": "zigzag_height",
+      "label": "Zigzag Height",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "zigzag_color",
+      "label": "Zigzag Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Section Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Section Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_sides",
+      "label": "Section Padding Sides",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_mobile",
+      "label": "Section Padding Top (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_mobile",
+      "label": "Section Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "section_padding_sides_mobile",
+      "label": "Section Padding Sides (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Container Settings"
+    },
+    {
+      "type": "range",
+      "id": "container_padding_top",
+      "label": "Container Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "container_padding_bottom",
+      "label": "Container Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "container_padding_sides",
+      "label": "Container Padding Sides",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "container_padding_top_mobile",
+      "label": "Container Padding Top (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "container_padding_bottom_mobile",
+      "label": "Container Padding Bottom (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "container_padding_sides_mobile",
+      "label": "Container Padding Sides (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "label": "Content Gap",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Text Content"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "text_padding",
+      "label": "Text Padding",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "Heading Font Size",
+      "min": 16,
+      "max": 60,
+      "step": 1,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "heading_font_weight",
+      "label": "Heading Font Weight",
+      "min": 300,
+      "max": 900,
+      "step": 100,
+      "default": 700
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "label": "Heading Margin Bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "text_font_size",
+      "label": "Text Font Size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_line_height",
+      "label": "Text Line Height",
+      "min": 1.0,
+      "max": 2.0,
+      "step": 0.1,
+      "default": 1.5
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "text_margin_bottom",
+      "label": "Text Margin Bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Button Settings"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button Background Color",
+      "default": "#f76320"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button Border Color",
+      "default": "#f76320"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "Button Border Width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button Border Radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "Button Padding Vertical",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "Button Padding Horizontal",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Button Font Size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_font_weight",
+      "label": "Button Font Weight",
+      "min": 300,
+      "max": 900,
+      "step": 100,
+      "default": 600
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background_color",
+      "label": "Button Hover Background Color",
+      "default": "#d64e10"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Button Hover Border Color",
+      "default": "#d64e10"
+    },
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
+      "type": "range",
+      "id": "image_area_width",
+      "label": "Image Area Width",
+      "min": 0.1,
+      "max": 0.9,
+      "step": 0.1,
+      "default": 0.5
+    },
+    {
+      "type": "range",
+      "id": "image_padding",
+      "label": "Image Padding",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Image Width (%)",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image Fit",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" },
+        { "value": "fill", "label": "Fill" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "image_border_width",
+      "label": "Image Border Width",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "color",
+      "id": "image_border_color",
+      "label": "Image Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image Border Radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "image_shadow_horizontal",
+      "label": "Image Shadow Horizontal",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "image_shadow_vertical",
+      "label": "Image Shadow Vertical",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "image_shadow_blur",
+      "label": "Image Shadow Blur",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "image_shadow_color",
+      "label": "Image Shadow Color",
+      "default": "rgba(0,0,0,0.1)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "main_image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image Alt Text",
+          "default": "Section Image"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text Content",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Gifts That Become Heirlooms"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Write your paragraph here..."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Create Now"
+        },
+        {
+          "type": "textarea",
+          "id": "button_icon",
+          "label": "Button SVG Icon"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Text with Zigzag",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
