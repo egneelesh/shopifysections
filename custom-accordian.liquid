@@ -1,0 +1,633 @@
+<style>
+  .faq-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    background: {{ section.settings.background_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .faq-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .faq-section-{{ section.id }} .faq-header {
+    text-align: {{ section.settings.heading_alignment }};
+    margin-bottom: {{ section.settings.heading_spacing }}px;
+  }
+
+  .faq-section-{{ section.id }} .faq-title {
+    color: {{ section.settings.heading_color }};
+    font-size: {{ section.settings.heading_size }}px;
+    margin: 0 0 1rem 0;
+  }
+
+  .faq-section-{{ section.id }} .faq-subtitle {
+    color: {{ section.settings.subheading_color }};
+    font-size: {{ section.settings.subheading_size }}px;
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  .faq-section-{{ section.id }} .faq-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: {{ section.settings.grid_gap }}px;
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    align-items: start; /* This prevents grid items from stretching */
+  }
+
+  @media screen and (max-width: 749px) {
+    .faq-section-{{ section.id }} .faq-grid {
+      grid-template-columns: 1fr;
+      gap: {{ section.settings.grid_gap_mobile }}px;
+      padding: 0 1rem;
+    }
+  }
+
+  .faq-section-{{ section.id }} .faq-item {
+    border: 1px solid {{ section.settings.border_color }};
+    border-radius: {{ section.settings.item_border_radius }}px;
+    background: {{ section.settings.item_background_color }};
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  /* Active state for the main faq-item */
+  .faq-section-{{ section.id }} .faq-item.active {
+    border-color: {{ section.settings.border_hover_color }};
+    box-shadow: {{ section.settings.item_shadow }};
+  }
+
+  .faq-section-{{ section.id }} .faq-item:hover {
+    border-color: {{ section.settings.border_hover_color }};
+    box-shadow: {{ section.settings.item_shadow }};
+  }
+
+  .faq-section-{{ section.id }} .faq-question {
+    padding: {{ section.settings.question_padding }}px;
+    background: {{ section.settings.question_background }};
+    color: {{ section.settings.question_color }};
+    font-size: {{ section.settings.question_size }}px;
+    font-weight: {{ section.settings.question_weight }};
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    margin: 0;
+    width: 100%;
+    text-align: left;
+    border: none;
+  }
+
+  .faq-section-{{ section.id }} .faq-question:hover {
+    background: {{ section.settings.question_hover_background }};
+  }
+
+  /* Active state styles - now applied through parent .faq-item.active */
+  .faq-section-{{ section.id }} .faq-item.active .faq-question {
+    background: {{ section.settings.question_active_background }};
+    color: {{ section.settings.question_active_color }};
+  }
+
+  .faq-section-{{ section.id }} .faq-icon {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 1rem;
+    position: relative;
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+  }
+
+  .faq-section-{{ section.id }} .faq-icon .plus,
+  .faq-section-{{ section.id }} .faq-icon .minus {
+    transition: opacity 0.3s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .faq-section-{{ section.id }} .faq-icon .plus {
+    opacity: 1;
+  }
+
+  .faq-section-{{ section.id }} .faq-icon .minus {
+    opacity: 0;
+  }
+
+  /* Active icon states through parent */
+  .faq-section-{{ section.id }} .faq-item.active .faq-icon .plus {
+    opacity: 0;
+  }
+
+  .faq-section-{{ section.id }} .faq-item.active .faq-icon .minus {
+    opacity: 1;
+  }
+
+  .faq-section-{{ section.id }} .faq-answer {
+    padding: 0 {{ section.settings.answer_padding }}px;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: {{ section.settings.answer_background }};
+    color: {{ section.settings.answer_color }};
+  }
+
+  .faq-section-{{ section.id }} .faq-item.active .faq-answer {
+    padding: {{ section.settings.answer_padding }}px;
+    max-height: 1000px;
+  }
+
+  .faq-section-{{ section.id }} .faq-answer-content {
+    font-size: {{ section.settings.answer_size }}px;
+    line-height: 1.6;
+  }
+
+  /* Custom icon colors */
+  .faq-section-{{ section.id }} .faq-icon svg {
+    fill: {{ section.settings.icon_color }};
+    width: 100%;
+    height: 100%;
+  }
+
+  .faq-section-{{ section.id }} .faq-item.active .faq-icon svg {
+    fill: {{ section.settings.icon_active_color }};
+  }
+</style>
+
+<section class="faq-section-{{ section.id }} section-{{ section.id }}-padding">
+  <div class="page-width">
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <div class="faq-header">
+        {% if section.settings.heading != blank %}
+          <h2 class="faq-title">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <p class="faq-subtitle">
+            {{ section.settings.subheading }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="faq-grid">
+      {% for block in section.blocks %}
+        <div class="faq-item" {{ block.shopify_attributes }}>
+          <button type="button" class="faq-question">
+            <span class="faq-question-text">{{ block.settings.question }}</span>
+            <span class="faq-icon">
+              <span class="plus">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                </svg>
+              </span>
+              <span class="minus">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M19,13H5V11H19V13Z"/>
+                </svg>
+              </span>
+            </span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-content rte">
+              {{ block.settings.answer }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const faqSection = document.querySelector('.faq-section-{{ section.id }}');
+    if (!faqSection) return;
+    
+    const faqItems = faqSection.querySelectorAll('.faq-item');
+    
+    // Initialize first item as active if specified
+    {% if section.settings.open_first_item %}
+      if (faqItems.length > 0) {
+        faqItems[0].classList.add('active');
+      }
+    {% endif %}
+    
+    // Add click event listeners
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question');
+      
+      if (question) {
+        question.addEventListener('click', () => {
+          const isActive = item.classList.contains('active');
+          
+          // Close all items if accordion mode
+          {% if section.settings.accordion_mode %}
+            faqItems.forEach(otherItem => {
+              if (otherItem !== item) {
+                otherItem.classList.remove('active');
+              }
+            });
+          {% endif %}
+          
+          // Toggle current item
+          if (isActive) {
+            item.classList.remove('active');
+          } else {
+            item.classList.add('active');
+          }
+        });
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Accordian",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Header Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Find answers to common questions about our products and services"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading Alignment",
+      "default": "center",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ]
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "label": "Heading Bottom Spacing",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Header Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading Size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Grid Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on Desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid Gap (Desktop)",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_mobile",
+      "label": "Grid Gap (Mobile)",
+      "min": 0,
+      "max": 30,
+      "step": 5,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "FAQ Item Styling"
+    },
+    {
+      "type": "color",
+      "id": "item_background_color",
+      "label": "Item Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "border_hover_color",
+      "label": "Border Hover Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "item_border_radius",
+      "label": "Item Border Radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 8,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "item_shadow",
+      "label": "Box Shadow",
+      "default": "0 4px 12px rgba(0,0,0,0.1)"
+    },
+    {
+      "type": "header",
+      "content": "Question Styling"
+    },
+    {
+      "type": "color",
+      "id": "question_background",
+      "label": "Question Background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "question_hover_background",
+      "label": "Question Hover Background",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "question_active_background",
+      "label": "Question Active Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "question_active_color",
+      "label": "Question Active Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "question_size",
+      "label": "Question Font Size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "question_padding",
+      "label": "Question Padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "question_weight",
+      "label": "Question Font Weight",
+      "default": "600",
+      "options": [
+        {"value": "400", "label": "Normal"},
+        {"value": "500", "label": "Medium"},
+        {"value": "600", "label": "Semi Bold"},
+        {"value": "700", "label": "Bold"}
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Answer Styling"
+    },
+    {
+      "type": "color",
+      "id": "answer_background",
+      "label": "Answer Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "label": "Answer Font Size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "answer_padding",
+      "label": "Answer Padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Icon Settings"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "icon_active_color",
+      "label": "Icon Active Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon Size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Behavior Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "accordion_mode",
+      "label": "Accordion Mode",
+      "default": true,
+      "info": "When enabled, only one FAQ item can be open at a time"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first_item",
+      "label": "Open First Item by Default",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How do I create a photobook?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Creating a photobook is easy! Simply upload your photos, choose your layout, add captions if desired, and our team will help you create the perfect memory book.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Accordian",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What types of photobooks do you offer?",
+            "answer": "<p>We offer hardback photobooks, layflat photobooks, themed photobooks, and custom scrapbook-style books for any occasion.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long does it take to create a photobook?",
+            "answer": "<p>The creation process typically takes 1-2 weeks from design approval to delivery, depending on the complexity of your project.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I use old printed photos?",
+            "answer": "<p>Yes! We can help digitize your old photos and incorporate them into your photobook. Our team provides scanning services for physical photographs.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What occasions are photobooks suitable for?",
+            "answer": "<p>Photobooks are perfect for weddings, anniversaries, birthdays, baby births, holidays, graduations, and any special moment you want to preserve.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

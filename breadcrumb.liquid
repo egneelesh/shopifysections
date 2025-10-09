@@ -1,0 +1,172 @@
+
+
+<style>
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  .section-{{ section.id }}{
+    background: {{ section.settings.bg_color }};
+  }
+
+  .breadcrumb-wrapper {
+  font-size: 14px;
+}
+
+.breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  text-transform: capitalize;
+}
+.breadcrumb-link_icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.breadcrumb-link {
+  text-decoration: none;
+  color: hsl(140 10% 45%);
+}
+
+.breadcrumb-separator {
+  margin: 0 8px;
+  color: hsl(140 10% 45%);
+}
+
+.breadcrumb-text {
+  color: #212c24;
+}
+
+</style>
+
+{% assign separator = section.settings.separator %}
+{% assign show_home_icon = section.settings.show_home_icon %}
+{% assign show_current_page = section.settings.show_current_page %}
+
+<section class="section-{{ section.id }} section-{{ section.id }}-padding">
+  <nav class="page-width breadcrumb-wrapper" aria-label="Breadcrumb">
+    <ul class="breadcrumb-list" role="list">
+        <li class="breadcrumb-item">
+            <a href="{{ routes.root_url }}" class="breadcrumb-link {% if show_home_icon %}breadcrumb-link_icon{% endif %}">
+                {% if show_home_icon %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M21.4498 10.275L11.9998 3.1875L2.5498 10.275L2.9998 11.625H3.7498V20.25H20.2498V11.625H20.9998L21.4498 10.275ZM5.2498 18.75V10.125L11.9998 5.0625L18.7498 10.125V18.75H14.9999V14.3333L14.2499 13.5833H9.74988L8.99988 14.3333V18.75H5.2498ZM10.4999 18.75H13.4999V15.0833H10.4999V18.75Z" fill="currentColor"/>
+                </svg>
+                {% endif %}
+                {{ 'Home' }}
+            </a>
+        </li>
+
+        {% if template.name == 'collection' %}
+        <li class="breadcrumb-separator">{{ separator }}</li>
+        <li class="breadcrumb-item">
+            <span class="breadcrumb-text">{{ collection.title }}</span>
+        </li>
+        {% elsif template.name == 'product' %}
+        {% if product.collections.size > 0 %}
+            <li class="breadcrumb-separator">{{ separator }}</li>
+            <li class="breadcrumb-item">
+            <a href="{{ product.collections.first.url }}" class="breadcrumb-link">
+                {{ product.collections.first.title }}
+            </a>
+            </li>
+        {% endif %}
+        <li class="breadcrumb-separator">{{ separator }}</li>
+        {% if show_current_page %}
+            <li class="breadcrumb-item">
+            <span class="breadcrumb-text">{{ product.title }}</span>
+            </li>
+        {% endif %}
+        {% elsif template.name == 'page' %}
+        <li class="breadcrumb-separator">{{ separator }}</li>
+        {% if show_current_page %}
+            <li class="breadcrumb-item">
+            <span class="breadcrumb-text">{{ page.title }}</span>
+            </li>
+        {% endif %}
+        {% endif %}
+    </ul>
+  </nav>
+</section>
+
+
+{% schema %}
+{
+  "name": "Breadcrumbs",
+  "tag": "section",
+  "class": "section-breadcrumbs",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#fff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_home_icon",
+      "label": "Show home icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_current_page",
+      "label": "Show current page title",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "separator",
+      "label": "Breadcrumb separator",
+      "default": "›"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Breadcrumbs",
+      "category": "Navigation"
+    }
+  ]
+}
+{% endschema %}

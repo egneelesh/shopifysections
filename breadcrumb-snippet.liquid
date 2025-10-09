@@ -1,0 +1,93 @@
+<style>
+  .breadcrumb-wrapper {
+    font-size: 14px;
+    padding: 20px 0;
+  }
+
+  .breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+  }
+  
+  .breadcrumb-link_icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .breadcrumb-link {
+    text-decoration: none;
+    color: hsl(140 10% 45%);
+  }
+
+  .breadcrumb-separator {
+    margin: 0 8px;
+    color: hsl(140 10% 45%);
+  }
+
+  .breadcrumb-text {
+    color: #212c24;
+  }
+</style>
+
+<nav class="page-width breadcrumb-wrapper" aria-label="Breadcrumb">
+  <ul class="breadcrumb-list" role="list">
+      <li class="breadcrumb-item">
+          <a href="{{ routes.root_url }}" class="breadcrumb-link breadcrumb-link_icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M21.4498 10.275L11.9998 3.1875L2.5498 10.275L2.9998 11.625H3.7498V20.25H20.2498V11.625H20.9998L21.4498 10.275ZM5.2498 18.75V10.125L11.9998 5.0625L18.7498 10.125V18.75H14.9999V14.3333L14.2499 13.5833H9.74988L8.99988 14.3333V18.75H5.2498ZM10.4999 18.75H13.4999V15.0833H10.4999V18.75Z" fill="currentColor"/>
+              </svg>
+              Home
+          </a>
+      </li>
+
+      {% if template.name == 'collection' %}
+      <li class="breadcrumb-separator">›</li>
+      <li class="breadcrumb-item">
+          <span class="breadcrumb-text">{{ collection.title }}</span>
+      </li>
+      {% elsif template.name == 'product' %}
+      {% if product.collections.size > 0 %}
+          <li class="breadcrumb-separator">›</li>
+          <li class="breadcrumb-item">
+          <a href="{{ product.collections.first.url }}" class="breadcrumb-link">
+              {{ product.collections.first.title }}
+          </a>
+          </li>
+      {% endif %}
+      <li class="breadcrumb-separator">›</li>
+      <li class="breadcrumb-item">
+          <span class="breadcrumb-text">{{ product.title }}</span>
+      </li>
+      {% elsif template.name == 'page' %}
+      <li class="breadcrumb-separator">›</li>
+      <li class="breadcrumb-item">
+          <span class="breadcrumb-text">{{ page.title }}</span>
+      </li>
+      {% elsif template.name == 'blog' %}
+      <li class="breadcrumb-separator">›</li>
+      <li class="breadcrumb-item">
+          <span class="breadcrumb-text">{{ blog.title }}</span>
+      </li>
+      {% elsif template.name == 'article' %}
+      <li class="breadcrumb-separator">›</li>
+      <li class="breadcrumb-item">
+          <a href="{{ blog.url }}" class="breadcrumb-link">{{ blog.title }}</a>
+      </li>
+      <li class="breadcrumb-separator">›</li>
+      <li class="breadcrumb-item">
+          <span class="breadcrumb-text">{{ article.title }}</span>
+      </li>
+      {% endif %}
+  </ul>
+</nav>

@@ -1,0 +1,575 @@
+<style>
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .cst-grid-image-section {
+    position: relative;
+    background: {{ section.settings.background_color }};
+    {% if section.settings.background_image %}
+      background-image: url({{ section.settings.background_image | image_url }});
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    {% endif %}
+  }
+
+  .cst-grid-image-section .zigzag {
+    width: 100%;
+    height: {{ section.settings.zigzag_height }}px;
+    overflow: hidden;
+    position: absolute;
+  }
+  .cst-grid-image-section .zigzag.top {
+    top: 0;
+  }
+  .cst-grid-image-section .zigzag.bottom {
+    bottom: 0;
+  }
+
+  .cst-grid-image-section .zigzag img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .cst-grid-container {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: {{ section.settings.grid_gap }}px;
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cst-grid-container {
+      grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+      gap: {{ section.settings.grid_gap_mobile }}px;
+      padding: 0 1rem;
+    }
+  }
+
+  .cst-grid-item {
+    position: relative;
+    border-radius: {{ section.settings.image_border_radius }}px;
+    overflow: hidden;
+    max-height: 350px;
+    width: 100%;
+  }
+
+  .cst-grid-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+    border-radius: {{ section.settings.image_border_radius }}px;
+  }
+
+  .cst-grid-item:hover .cst-grid-image {
+    transform: scale(1.05);
+  }
+
+  /* Button Display Logic */
+  .cst-grid-button-overlay {
+    position: absolute;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+    
+    /* Button Alignment */
+    {% case section.settings.button_alignment %}
+      {% when 'top-left' %}
+        top: 20px;
+        left: 20px;
+        transform: translate(0, 0);
+      {% when 'top-center' %}
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      {% when 'top-right' %}
+        top: 20px;
+        right: 20px;
+        transform: translate(0, 0);
+      {% when 'center-left' %}
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+      {% when 'center-center' %}
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      {% when 'center-right' %}
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+      {% when 'bottom-left' %}
+        bottom: 20px;
+        left: 20px;
+        transform: translate(0, 0);
+      {% when 'bottom-center' %}
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      {% when 'bottom-right' %}
+        bottom: 20px;
+        right: 20px;
+        transform: translate(0, 0);
+    {% endcase %}
+    
+    /* Button Display Mode */
+    {% if section.settings.button_display == 'hover' %}
+      opacity: 0;
+    {% else %}
+      opacity: 1;
+    {% endif %}
+  }
+
+  {% if section.settings.button_display == 'hover' %}
+    .cst-grid-item:hover .cst-grid-button-overlay {
+      opacity: 1;
+    }
+  {% endif %}
+
+  .cst-grid-overlay-button {
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: {{ section.settings.button_border_radius }}px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: {{ section.settings.button_text_color }};
+    background-color: {{ section.settings.button_bg_color }};
+    opacity: {{ section.settings.button_opacity | divided_by: 100.0 }};
+    transition: all 0.3s ease;
+  }
+
+  .cst-grid-overlay-button:hover {
+    opacity: {{ section.settings.button_opacity | divided_by: 100.0 | plus: 0.1 }};
+    transform: scale(1.05);
+  }
+
+  .cst-grid-button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cst-grid-button-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: {{ section.settings.button_text_color }};
+  }
+
+  .cst-grid-button-text {
+    white-space: nowrap;
+  }
+
+  /* Text block styles */
+  .cst-grid-text-block {
+    grid-column: 1 / -1;
+    text-align: {{ section.settings.text_alignment }};
+    padding: 2rem 0;
+  }
+
+  .cst-grid-text-block .cst-grid-heading {
+    margin: 0 0 1rem 0;
+    font-size: {{ section.settings.heading_size }}px;
+  }
+
+  .cst-grid-text-block .cst-grid-description {
+    margin: 0 0 2rem 0;
+    font-size: 1.6rem;
+    line-height: 1.5;
+  }
+
+  .cst-grid-text-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: {{ section.settings.button_border_radius }}px;
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    text-decoration: none;
+    font-size: 1.6rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .cst-grid-text-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+</style>
+
+<div class="cst-grid-image-section section-{{ section.id }}-padding">
+  {% if section.settings.top_zigzag != blank %}
+    <div class="zigzag top">
+      <img src="{{ section.settings.top_zigzag | image_url }}" alt="Top Zigzag" width="auto" height="auto" loading="lazy" />
+    </div>
+  {% endif %}
+  
+  <div class="cst-grid-container page-width">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'image' %}
+          <div class="cst-grid-item" {{ block.shopify_attributes }}>
+            <img 
+              src="{{ block.settings.image | image_url: width: 800 }}" 
+              alt="{{ block.settings.image_alt }}" 
+              class="cst-grid-image" 
+              loading="lazy" 
+              width="auto" 
+              height="auto" />
+            
+            <div class="cst-grid-button-overlay">
+                <a href="{{ block.settings.button_link }}"  class="cst-grid-overlay-button">
+                    <span class="cst-grid-button-text">{{ block.settings.button_label }}</span>
+                    <span class="cst-grid-button-icon">
+                    {{ section.settings.button_svg_code }}
+                    </span>
+                </a>
+            </div>
+          </div>
+        
+        {% when 'text' %}
+          <div class="cst-grid-text-block" {{ block.shopify_attributes }}>
+            {% if block.settings.heading != blank %}
+              <h2 class="cst-grid-heading">{{ block.settings.heading }}</h2>
+            {% endif %}
+            
+            {% if block.settings.description != blank %}
+              <div class="cst-grid-description">{{ block.settings.description }}</div>
+            {% endif %}
+            
+            {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+              <a href="{{ block.settings.button_link }}" class="cst-grid-text-button">
+                {{ block.settings.button_label }}
+                <span class="cst-grid-button-icon">
+                  {{ section.settings.button_svg_code }}
+                </span>
+              </a>
+            {% endif %}
+          </div>
+      {% endcase %}
+    {% endfor %}
+  </div>
+  
+  {% if section.settings.bottom_zigzag != blank %}
+    <div class="zigzag bottom">
+      <img src="{{ section.settings.bottom_zigzag | image_url }}" alt="Bottom Zigzag" width="auto" height="auto" loading="lazy" />
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Image Grid with Buttons",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Zigzag Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "top_zigzag",
+      "label": "Top Zigzag Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bottom_zigzag",
+      "label": "Bottom Zigzag Image"
+    },
+    {
+      "type": "range",
+      "id": "zigzag_height",
+      "label": "Zigzag Height",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Grid Settings"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on Desktop",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "label": "Columns on Mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid Gap (Desktop)",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_mobile",
+      "label": "Grid Gap (Mobile)",
+      "min": 0,
+      "max": 30,
+      "step": 5,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image Border Radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Text Content Settings"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "default": "center",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ]
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Button Settings"
+    },
+    {
+      "type": "select",
+      "id": "button_display",
+      "label": "Button Display",
+      "default": "hover",
+      "options": [
+        {"value": "hover", "label": "Show on Hover"},
+        {"value": "always", "label": "Always Visible"}
+      ]
+    },
+    {
+      "type": "select",
+      "id": "button_alignment",
+      "label": "Button Alignment",
+      "default": "center-center",
+      "options": [
+        {"value": "top-left", "label": "Top Left"},
+        {"value": "top-center", "label": "Top Center"},
+        {"value": "top-right", "label": "Top Right"},
+        {"value": "center-left", "label": "Center Left"},
+        {"value": "center-center", "label": "Center Center"},
+        {"value": "center-right", "label": "Center Right"},
+        {"value": "bottom-left", "label": "Bottom Left"},
+        {"value": "bottom-center", "label": "Bottom Center"},
+        {"value": "bottom-right", "label": "Bottom Right"}
+      ]
+    },
+    {
+      "type": "html",
+      "id": "button_svg_code",
+      "label": "Button SVG Code",
+      "default": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z'/></svg>"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "button_opacity",
+      "label": "Button Background Opacity",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 80,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button Border Radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 4,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image Alt Text",
+          "default": "Grid Image"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "View More"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Image Grid Section"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Add a description for your image grid section here.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "View All"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Grid with Buttons",
+      "blocks": [
+        {
+          "type": "text"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
