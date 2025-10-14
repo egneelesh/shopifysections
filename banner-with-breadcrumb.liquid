@@ -1,0 +1,312 @@
+{% comment %}
+  Banner With Breadcrumb Section (for Dawn theme)
+  - Option to show/hide breadcrumb
+  - Option to use custom height or auto
+  - Subtitle supports richtext
+  - Added: top and bottom decoration images with show/hide checkboxes
+{% endcomment %}
+
+<style>
+.section-{{ section.id }}-padding {
+padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+}
+
+@media screen and (min-width: 750px) {
+.section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+}
+}
+
+.banner-with-breadcrumb {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: {{ section.settings.bg_color }};
+    {% if section.settings.bg_image != blank %}
+      background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');
+      background-size: cover;
+      background-position: center;
+    {% endif %}
+    {% if section.settings.enable_custom_height %}
+      height: {{ section.settings.desktop_height }}px;
+    {% else %}
+      height: auto;
+    {% endif %}
+}
+
+.banner-with-breadcrumb__decoration {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    z-index: 1;
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+    width: 100%;
+}
+
+.banner-with-breadcrumb__decoration--top {
+    top: 0;
+}
+
+.banner-with-breadcrumb__decoration--bottom {
+    bottom: 0px;
+}
+
+.banner-with-breadcrumb__wrapper {
+    z-index: 2;
+}
+
+.banner-with-breadcrumb__content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.banner-with-breadcrumb__content .breadcrumb-list{
+    justify-content: center;
+}
+.banner-with-breadcrumb__title {
+    margin: 0;
+    font-weight: 700;
+}
+
+.banner-with-breadcrumb__subtitle {
+    margin-top: 10px;
+    color: #4b4b4b;
+    font-size: 16px;
+}
+
+.banner-with-breadcrumb__image{
+    position: absolute;
+    max-width: 20%;
+    height: auto;
+    bottom: 0;
+}
+.banner-with-breadcrumb__image--left {
+    left: 0;
+}
+
+.banner-with-breadcrumb__image--right {
+    right: 0;
+}
+
+@media (max-width: 749px) {
+    {% if section.settings.enable_custom_height %}
+    .banner-with-breadcrumb {
+        height: {{ section.settings.mobile_height }}px !important;
+    }
+    {% else %}
+    .banner-with-breadcrumb {
+        height: auto !important;
+    }
+    {% endif %}
+    
+    .banner-with-breadcrumb__title {
+        font-size: 22px;
+    }
+    .banner-with-breadcrumb__image--left, .banner-with-breadcrumb__image--right {
+        max-width: 35%;
+    }
+}
+</style>
+
+<section class="banner-with-breadcrumb section-{{ section.id }}-padding">
+
+  {%- if section.settings.show_top_decoration and section.settings.top_decoration_image != blank -%}
+    <img 
+        class="banner-with-breadcrumb__decoration banner-with-breadcrumb__decoration--top"
+        src="{{ section.settings.top_decoration_image | image_url: width: 1600 }}" 
+        alt="Top Decoration" 
+        loading="lazy"
+        width="auto"
+        height="auto"
+    >
+  {%- endif -%}
+
+  
+  <!-- Left Image -->
+  {% if section.settings.left_image != blank %}
+    <img 
+        class="banner-with-breadcrumb__image banner-with-breadcrumb__image--left"
+        src="{{ section.settings.left_image | image_url: width: 600 }}" 
+        alt="Left Image"
+        loading="lazy"
+        width="auto"
+        height="auto"
+    >
+  {% endif %}
+
+  <div class="page-width banner-with-breadcrumb__wrapper">
+      <!-- Center Content -->
+      <div class="banner-with-breadcrumb__content">
+        <h1 class="banner-with-breadcrumb__title h1">
+            {{ section.settings.title }}
+        </h1>
+        {% if section.settings.show_breadcrumb %}
+            {% render 'breadcrumbs' %}
+        {% endif %}
+        {% if section.settings.subtitle != blank %}
+            <div class="banner-with-breadcrumb__subtitle rte">
+            {{ section.settings.subtitle }}
+            </div>
+        {% endif %}
+      </div>
+  </div>
+
+  <!-- Right Image -->
+  {% if section.settings.right_image != blank %}
+    <img
+        class="banner-with-breadcrumb__image banner-with-breadcrumb__image--right"
+        src="{{ section.settings.right_image | image_url: width: 600 }}" 
+        alt="Right Image"
+        loading="lazy"
+        height="auto"
+        width="auto"
+    >
+  {% endif %}
+
+  {%- if section.settings.show_bottom_decoration and section.settings.bottom_decoration_image != blank -%}
+    <img 
+        class="banner-with-breadcrumb__decoration banner-with-breadcrumb__decoration--bottom"
+        src="{{ section.settings.bottom_decoration_image | image_url: width: 1600 }}" 
+        alt="Bottom Decoration" 
+        loading="lazy"
+        width="auto"
+        height="auto"
+    >
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Banner With Breadcrumb",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_height",
+      "label": "Enable custom height",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Left Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image",
+      "label": "Right Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#fbe7e8"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Main Title",
+      "default": "Layflat Photobook – A4 Landscape Hardback"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "<p>Your perfect keepsake for special memories</p>"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop Height (px)",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile Height (px)",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "default": 300
+    },
+    {
+      "type": "header",
+      "content": "Decoration Images"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_decoration",
+      "label": "Show Top Decoration Image",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "top_decoration_image",
+      "label": "Top Decoration Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_decoration",
+      "label": "Show Bottom Decoration Image",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "bottom_decoration_image",
+      "label": "Bottom Decoration Image"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    },
+  ],
+  "presets": [
+    {
+      "name": "Banner With Breadcrumb"
+    }
+  ]
+}
+{% endschema %}

@@ -1,61 +1,60 @@
 <style>
-.cst-container{
-    width: 1600px;
-    margin: 0 auto;
-}
+/* Keep all existing styles intact */
 .product-comparison .comparison-row {
   display: flex;
-  justify-content: {{ section.settings.comparison_alignment | default: 'flex-start' }};
+  justify-content: {{ section.settings.comparison_alignment }};
 }
-
+.product-comparison {
+  padding: 40px 0px;
+}
 .product-item {
-  border: 1px solid {{ section.settings.product_border_color | default: '#ddd' }};
-  padding: {{ section.settings.product_padding | default: '20px' }};
+  border: 1px solid {{ section.settings.product_border_color }};
+  padding: {{ section.settings.product_padding }};
   text-align: center;
   position: relative;
   transition: transform 0.3s ease;
   flex: 1;
-  min-width: {{ section.settings.product_min_width | default: '200px' }};
-  max-width: {{ section.settings.product_max_width | default: '250px' }};
-  background-color: {{ section.settings.product_bg_color | default: 'transparent' }};
-  border-radius: {{ section.settings.product_border_radius | default: '0px' }};
+  min-width: {{ section.settings.product_min_width }};
+  max-width: {{ section.settings.product_max_width }};
+  background-color: {{ section.settings.product_bg_color }};
+  border-radius: {{ section.settings.product_border_radius }};
 }
 
 .product-item:hover {
-  transform: scale({{ section.settings.product_hover_scale | default: '1.05' }});
-  box-shadow: 0 0 {{ section.settings.product_hover_shadow | default: '10px' }} rgba(0, 0, 0, 0.1);
+  transform: scale({{ section.settings.product_hover_scale }});
+  box-shadow: 0 0 {{ section.settings.product_hover_shadow }} rgba(0, 0, 0, 0.1);
 }
 
 .product-item .current {
-  border: 2px solid {{ section.settings.current_product_border_color | default: 'green' }};
+  border: 2px solid {{ section.settings.current_product_border_color }};
 }
 
 .view-product-button {
   display: inline-block;
   margin-top: 10px;
-  background-color: {{ section.settings.button_bg_color | default: '#4CAF50' }};
-  color: {{ section.settings.button_text_color | default: 'white' }};
-  padding: {{ section.settings.button_padding | default: '10px 20px' }};
+  background-color: {{ section.settings.button_bg_color }};
+  color: {{ section.settings.button_text_color }};
+  padding: {{ section.settings.button_padding }};
   text-decoration: none;
-  border-radius: {{ section.settings.button_border_radius | default: '5px' }};
-  font-size: {{ section.settings.button_font_size | default: '14px' }};
-  border: {{ section.settings.button_border | default: 'none' }};
+  border-radius: {{ section.settings.button_border_radius }};
+  font-size: {{ section.settings.button_font_size }};
+  border: {{ section.settings.button_border }};
 }
 
 .view-product-button:hover {
-  background-color: {{ section.settings.button_hover_bg_color | default: '#45a049' }};
-  color: {{ section.settings.button_hover_text_color | default: 'white' }};
+  background-color: {{ section.settings.button_hover_bg_color }};
+  color: {{ section.settings.button_hover_text_color }};
 }
 
 .product-item .current-label {
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: {{ section.settings.current_label_bg_color | default: 'green' }};
-  color: {{ section.settings.current_label_text_color | default: 'white' }};
+  background-color: {{ section.settings.current_label_bg_color }};
+  color: {{ section.settings.current_label_text_color }};
   padding: 5px;
   font-size: 12px;
-  border-radius: {{ section.settings.current_label_border_radius | default: '0px' }};
+  border-radius: {{ section.settings.current_label_border_radius }};
 }
 
 /* Modal Styling */
@@ -68,25 +67,25 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0, 0, 0, {{ section.settings.modal_overlay_opacity | default: '0.5' }});
+  background-color: rgba(0, 0, 0, {{ section.settings.modal_overlay_opacity }});
 }
 
 .modal-content {
-  background-color: {{ section.settings.modal_bg_color | default: '#fefefe' }};
+  background-color: {{ section.settings.modal_bg_color }};
   margin: 5% auto;
-  padding: {{ section.settings.modal_padding | default: '20px' }};
+  padding: 20px;
   border: 1px solid #888;
   width: 90%;
-  max-width: {{ section.settings.modal_max_width | default: '800px' }};
-  border-radius: {{ section.settings.modal_border_radius | default: '8px' }};
+  max-width: 1000px;
+  border-radius: 5px;
   position: relative;
   max-height: 80vh;
   overflow-y: auto;
 }
 
 .close {
-  color: {{ section.settings.close_button_color | default: '#aaa' }};
-  font-size: {{ section.settings.close_button_size | default: '28px' }};
+  color: {{ section.settings.close_button_color }};
+  font-size: 28px;
   font-weight: bold;
   position: absolute;
   top: 10px;
@@ -97,78 +96,84 @@
 
 .close:hover,
 .close:focus {
-  color: {{ section.settings.close_button_hover_color | default: 'black' }};
+  color: {{ section.settings.close_button_hover_color }};
   text-decoration: none;
   cursor: pointer;
 }
-
-.product-option {
+.product_compare--popup {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: 10px;
-  padding: {{ section.settings.modal_product_padding | default: '10px' }};
-  border: 1px solid {{ section.settings.modal_product_border_color | default: '#eee' }};
-  border-radius: {{ section.settings.modal_product_border_radius | default: '5px' }};
-  background: {{ section.settings.modal_product_bg_color | default: 'white' }};
+  justify-content: space-between;
+  height: 100%;
+  border: 1px solid #8b8b8b3d;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0px 1px 4px 0 #8b8b8b33;
 }
-
-.product-option button {
-  margin-top: 10px;
-  background-color: {{ section.settings.modal_button_bg_color | default: '#4CAF50' }};
-  color: {{ section.settings.modal_button_text_color | default: 'white' }};
-  padding: {{ section.settings.modal_button_padding | default: '8px 16px' }};
-  border: none;
+.product_compare--popup_change{
   cursor: pointer;
-  border-radius: {{ section.settings.modal_button_border_radius | default: '4px' }};
-  font-size: {{ section.settings.modal_button_font_size | default: '14px' }};
 }
-
-.product-option button:hover {
-  background-color: {{ section.settings.modal_button_hover_bg_color | default: '#45a049' }};
+.product_compare--popup_image {
+  width: 100%;
 }
-
+.product_compare--popup_title {
+  font-size: 17px;
+}
+.product_compare--popup_price {
+  font-weight: 700;
+  color: #ff2600;
+  margin-bottom: 0;
+}
+.add-to-comparison {
+  background: #FF580D;
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  margin-top: 15px;
+  color: #fff;
+  font-size: 16px;
+}
 .product-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax({{ section.settings.modal_product_min_width | default: '150px' }}, 1fr));
-  gap: {{ section.settings.modal_grid_gap | default: '15px' }};
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
   margin-top: 20px;
 }
 
 #open-modal-button {
-  background-color: {{ section.settings.open_modal_button_bg_color | default: '#007bff' }};
-  color: {{ section.settings.open_modal_button_text_color | default: 'white' }};
+  background-color: {{ section.settings.open_modal_button_bg_color }};
+  color: {{ section.settings.open_modal_button_text_color }};
   border: none;
-  padding: {{ section.settings.open_modal_button_padding | default: '10px 20px' }};
-  border-radius: {{ section.settings.open_modal_button_border_radius | default: '4px' }};
+  padding: {{ section.settings.open_modal_button_padding }};
+  border-radius: {{ section.settings.open_modal_button_border_radius }};
   cursor: pointer;
   margin-top: 20px;
-  font-size: {{ section.settings.open_modal_button_font_size | default: '16px' }};
+  font-size: {{ section.settings.open_modal_button_font_size }};
 }
 
 #open-modal-button:hover {
-  background-color: {{ section.settings.open_modal_button_hover_bg_color | default: '#0056b3' }};
+  background-color: {{ section.settings.open_modal_button_hover_bg_color }};
 }
 
 .remove-product {
   position: absolute;
   top: 5px;
   right: 5px;
-  background: {{ section.settings.remove_button_bg_color | default: '#ff4444' }};
-  color: {{ section.settings.remove_button_text_color | default: 'white' }};
+  background: {{ section.settings.remove_button_bg_color }};
+  color: {{ section.settings.remove_button_text_color }};
   border: none;
   border-radius: 50%;
-  width: {{ section.settings.remove_button_size | default: '24px' }};
-  height: {{ section.settings.remove_button_size | default: '24px' }};
+  width: {{ section.settings.remove_button_size }};
+  height: {{ section.settings.remove_button_size }};
   cursor: pointer;
-  font-size: {{ section.settings.remove_button_font_size | default: '14px' }};
+  font-size: {{ section.settings.remove_button_font_size }};
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .remove-product:hover {
-  background: {{ section.settings.remove_button_hover_bg_color | default: '#cc0000' }};
+  background: {{ section.settings.remove_button_hover_bg_color }};
 }
 
 .comparison-table {
@@ -191,27 +196,20 @@
   background-color: #f9f9f9;
 }
 
-.product-option img {
-  max-width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-radius: {{ section.settings.product_image_border_radius | default: '0px' }};
-}
-
 /* Search and Pagination Styles */
 .search-container {
   margin-bottom: 20px;
   position: relative;
 }
 
-#product-search {
+#product-search, #change-product-search {
   width: 100%;
-  padding: {{ section.settings.search_padding | default: '10px 40px 10px 15px' }};
-  border: 1px solid {{ section.settings.search_border_color | default: '#ddd' }};
-  border-radius: {{ section.settings.search_border_radius | default: '4px' }};
-  font-size: {{ section.settings.search_font_size | default: '16px' }};
-  background-color: {{ section.settings.search_bg_color | default: 'white' }};
-  color: {{ section.settings.search_text_color | default: 'inherit' }};
+  padding: {{ section.settings.search_padding }};
+  border: 1px solid {{ section.settings.search_border_color }};
+  border-radius: {{ section.settings.search_border_radius }};
+  font-size: {{ section.settings.search_font_size }};
+  background-color: {{ section.settings.search_bg_color }};
+  color: {{ section.settings.search_text_color }};
 }
 
 .search-icon {
@@ -219,7 +217,7 @@
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: {{ section.settings.search_icon_color | default: '#777' }};
+  color: {{ section.settings.search_icon_color }};
 }
 
 .loading {
@@ -232,44 +230,44 @@
   text-align: center;
   margin: 15px 0;
   color: #666;
-  font-size: {{ section.settings.pagination_font_size | default: '14px' }};
+  font-size: 14px;
 }
 
 .load-more-container {
   text-align: center;
   margin-top: 20px;
 }
+.custom_product-comparison_flex{
+  display: flex;
+}
 
-#load-more-button {
-  background-color: {{ section.settings.load_more_button_bg_color | default: '#007bff' }};
-  color: {{ section.settings.load_more_button_text_color | default: 'white' }};
+#load-more-button, #change-load-more-button {
+  background-color: #ff580d;
+  color: #ffffff;
   border: none;
-  padding: {{ section.settings.load_more_button_padding | default: '10px 20px' }};
-  border-radius: {{ section.settings.load_more_button_border_radius | default: '4px' }};
+  border-radius: 5px;
   cursor: pointer;
-  font-size: {{ section.settings.load_more_button_font_size | default: '16px' }};
+  font-size: 16px;
+  min-width: 200px;
+  height: 40px;
+  margin: auto;
 }
 
-#load-more-button:hover {
-  background-color: {{ section.settings.load_more_button_hover_bg_color | default: '#0056b3' }};
-}
-
-#load-more-button:disabled {
-  background-color: {{ section.settings.load_more_button_disabled_bg_color | default: '#cccccc' }};
+#load-more-button:disabled, #change-load-more-button:disabled {
   cursor: not-allowed;
 }
 
 .metafield-value {
   margin-top: 5px;
-  font-size: {{ section.settings.metafield_value_font_size | default: '14px' }};
-  color: {{ section.settings.metafield_value_color | default: '#555' }};
+  font-size: {{ section.settings.metafield_value_font_size }};
+  color: {{ section.settings.metafield_value_color }};
 }
 
 .metafield-label {
   font-weight: bold;
   margin-top: 10px;
-  font-size: {{ section.settings.metafield_label_font_size | default: '14px' }};
-  color: {{ section.settings.metafield_label_color | default: 'inherit' }};
+  font-size: {{ section.settings.metafield_label_font_size }};
+  color: {{ section.settings.metafield_label_color }};
 }
 
 .no-products {
@@ -280,32 +278,10 @@
 
 /* Modal heading styling */
 #modal-heading {
-  text-align: {{ section.settings.heading_alignment | default: 'left' }};
-  color: {{ section.settings.modal_heading_color | default: 'inherit' }};
-  font-size: {{ section.settings.modal_heading_font_size | default: '24px' }};
-  margin-bottom: {{ section.settings.modal_heading_margin_bottom | default: '20px' }};
-}
-
-/* Product title styling in modal */
-.product-option p {
-  color: {{ section.settings.modal_product_title_color | default: 'inherit' }};
-  font-size: {{ section.settings.modal_product_title_font_size | default: '14px' }};
-}
-
-/* Product price styling in modal */
-.product-option p:nth-child(3) {
-  color: {{ section.settings.modal_product_price_color | default: '#333' }};
-  font-size: {{ section.settings.modal_product_price_font_size | default: '14px' }};
-}
-
-/* New styles for added functionality */
-.add-to-comparison.added {
-  background-color: #6c757d;
-  cursor: default;
-}
-
-.add-to-comparison.added:hover {
-  background-color: #6c757d;
+  text-align: {{ section.settings.heading_alignment }};
+  color: {{ section.settings.modal_heading_color }};
+  font-size: {{ section.settings.modal_heading_font_size }};
+  margin-bottom: {{ section.settings.modal_heading_margin_bottom }};
 }
 
 .change-product-button {
@@ -324,21 +300,6 @@
   background-color: #e0a800;
 }
 
-.change-modal .product-option {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.change-modal .product-option:hover {
-  transform: scale(1.03);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.change-modal .product-option.selected {
-  border: 2px solid #007bff;
-  background-color: #f8f9fa;
-}
-
 .change-modal-heading {
   text-align: center;
   margin-bottom: 20px;
@@ -352,49 +313,64 @@
   margin-top: 10px;
   width: 100%;
 }
+.product-table-view .porduct-empty-name {
+  min-height: 280px;
+}
 
 /* New Design Styles Based on Image */
 .product-card {
   border: 1px solid #e0e0e0;
-  padding: 16px;
+  padding: 20px;
   background: white;
   position: relative;
-  min-height: 400px;
   display: flex;
   flex-direction: column;
 }
 
-.product-card.current {
+.product_compare--card {
+  border: 1px solid #c3c3c3;
+  padding: 15px;
+  border-radius: 10px;
+  position: relative;
+  min-height: 280px;
+}
+.product_compare--card.current {
   border-color: #4CAF50;
   border-width: 2px;
 }
 
-.product-badge {
+.product_compare--card_badge {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: -10px;
+  right: -10px;
   background: #4CAF50;
   color: white;
   padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 50px;
+  font-size: 11px;
   font-weight: bold;
 }
-
-.product-image {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-  margin: 0 auto 16px;
+.product_compare--card_image {
+  overflow: hidden;
 }
-
+.product_compare--card-image {
+  width: 60%;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+  border-radius: 5px;
+  transition: 0.7s ease;
+}
+.product_compare--card-image:hover {
+  transform: scale(1.1);
+}
 .product-code {
   color: #666;
   font-size: 12px;
   margin-bottom: 4px;
 }
 
-.product-name {
+.product-compare_card--title {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 8px;
@@ -416,6 +392,7 @@
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
+  min-height: 40px;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -480,10 +457,10 @@
   font-size: 16px;
 }
 
-.remove-btn {
+.remove-product_compare--card {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: -7px;
+  right: -6px;
   background: {{ section.settings.remove_btn_bg }};
   color: white;
   border: none;
@@ -494,34 +471,199 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 25px;
 }
 
-.remove-btn:hover {
+.remove-product_compare--card:hover {
   background:  {{ section.settings.remove_btn_hover }};
+}
+
+/* NEW: Responsive Styles - Added to existing styles */
+@media (max-width: 1024px) {
+  {% comment %} .custom_product-comparison_flex {
+    flex-direction: column;
+  }
+  
+  .product-table-view {
+    display: none;
+  } {% endcomment %}
+  
+  .comparison-row {
+    overflow-x: auto;
+    {% comment %} padding-bottom: 15px; {% endcomment %}
+    scrollbar-width: thin;
+    scrollbar-color: #ddd transparent;
+  }
+  
+  .comparison-row::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .comparison-row::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .comparison-row::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+  
+  .comparison-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 15px;
+  }
+  
+  .product-card {
+    min-width: 280px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-comparison {
+    padding: 20px 0;
+  }
+  
+  .comparison-header {
+    margin-bottom: 20px;
+  }
+  
+  .comparison-title {
+    font-size: 20px;
+  }
+  
+  .comparison-subtitle {
+    font-size: 14px;
+  }
+  
+  .product_compare--card {
+    min-height: 250px;
+    padding: 12px;
+  }
+  
+  .product-compare_card--title {
+    font-size: 14px;
+  }
+  
+  .product_compare--card-image {
+    width: 70%;
+  }
+  
+  .modal-content {
+    margin: 10% auto;
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .product-list {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  
+  .product_compare--popup_title {
+    font-size: 14px;
+  }
+  
+  #open-modal-button {
+    width: 100%;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-table-view .porduct-empty-name{
+    min-height: 300px;
+  }
+  .product-card {
+    min-width: 175px;
+    padding: 8px;
+  }
+  
+  .product_compare--card {
+    min-height: 230px;
+  }
+  
+  .product_compare--card-image {
+    width: 80%;
+  }
+  
+  .product-actions-new {
+    gap: 6px;
+  }
+  
+  .btn-view, .btn-change {
+    padding: 8px;
+    font-size: 13px;
+  }
+  
+  .spec-row {
+    padding: 6px 0;
+    min-height: 35px;
+    font-size: 13px;
+  }
+  
+  .product-list {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .product_compare--popup {
+    padding: 8px;
+  }
+  
+  .add-to-comparison {
+    height: 35px;
+    font-size: 14px;
+  }
+}
+
+/* Enhanced mobile interaction */
+.comparison-row {
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Visual indicator for scrollable content on mobile */
+@media (max-width: 1024px) {
+  .comparison-row::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    background: linear-gradient(to right, transparent, rgba(0,0,0,0.1));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .comparison-row.scrollable::after {
+    opacity: 1;
+  }
 }
 </style>
 
 <section class="product-comparison">
-  <div class="cst-container">
+  <div class="container">
     <div class="comparison-header">
       <h1 class="comparison-title">{{ section.settings.heading }}</h1>
       <p class="comparison-subtitle">{{ section.settings.subheading }}</p>
     </div>
-    <div class="flex">
-        <div class="product-table-view product-card">
-          <div class="porduct-empty-name"> Product</div>
-          <div class="metafield-lables product-specs">
-            {% for block in section.blocks %}
-              {% if block.settings.label %}
-                <span class="spec-row">{{ block.settings.label }}</span>
-              {% endif %}
-            {% endfor %}
-          </div>
+    <div class="custom_product-comparison_flex">
+      <div class="product-table-view product-card">
+        <div class="porduct-empty-name"> Product</div>
+        <div class="metafield-lables product-specs">
+          {% for block in section.blocks %}
+            {% if block.settings.label %}
+              <span class="spec-row">{{ block.settings.label }}</span>
+            {% endif %}
+          {% endfor %}
         </div>
-        <div class="comparison-row" id="comparison-container">
-          <!-- Current product will be added here by JavaScript -->
-        </div>
+      </div>
+      <div class="comparison-row" id="comparison-container">
+        <!-- Current product will be added here by JavaScript -->
+      </div>
     </div>
     <button id="open-modal-button">+ Add Product to Compare</button>
 
@@ -530,8 +672,6 @@
       <div class="modal-content">
         <span class="close">&times;</span>
         <h2 id="modal-heading">Select Products for Comparison</h2>
-        
-        <!-- Search Bar -->
         <div class="search-container">
           <input type="text" id="product-search" placeholder="Search products by name...">
           <span class="search-icon">🔍</span>
@@ -540,37 +680,25 @@
         <div class="product-list" id="product-selection-list">
           <!-- Products will be loaded here by JavaScript -->
         </div>
-        
-        <!-- Pagination Info -->
         <div class="pagination-info" id="pagination-info"></div>
-        
-        <!-- Load More Button -->
         <div class="load-more-container">
           <button id="load-more-button">Load More Products</button>
         </div>
       </div>
     </div>
 
-    <!-- Modal Popup for Product Replacement -->
     <div id="product-change-modal" class="modal change-modal">
       <div class="modal-content">
         <span class="close">&times;</span>
         <h2 class="change-modal-heading">Select a Replacement Product</h2>
-        
-        <!-- Search Bar -->
         <div class="search-container">
           <input type="text" id="change-product-search" placeholder="Search products by name...">
           <span class="search-icon">🔍</span>
         </div>
-        
         <div class="product-list" id="product-change-list">
           <!-- Products will be loaded here by JavaScript -->
         </div>
-        
-        <!-- Pagination Info -->
         <div class="pagination-info" id="change-pagination-info"></div>
-        
-        <!-- Load More Button -->
         <div class="load-more-container">
           <button id="change-load-more-button">Load More Products</button>
         </div>
@@ -579,13 +707,18 @@
   </div>
 </section>
 
-<!-- Preload ALL products data with metafields using Liquid -->
+<!-- Preload products data with metafields using Liquid -->
 <script type="application/json" id="AllProductsData">
 {
   "products": [
-    {%- comment -%} Get ALL products with metafields {%- endcomment -%}
-    {%- paginate collections.all.products by 1000 -%}
-      {%- for product in collections.all.products -%}
+    {%- comment -%} Get products from selected collection or all products {%- endcomment -%}
+    {%- assign selected_collection = section.settings.collection_handle -%}
+    
+    {%- if selected_collection != blank -%}
+      {%- assign product_collection = collections[selected_collection] -%}
+      {%- assign products_to_show = product_collection.products -%}
+      {%- comment -%} Products from selected collection {%- endcomment -%}
+      {%- for product in products_to_show -%}
         {
           "id": {{ product.id | json }},
           "title": {{ product.title | json }},
@@ -600,26 +733,81 @@
           },
           "images": {{ product.images | json }},
           "metafields": {
-            {%- for block in section.blocks -%}
+           {%- for block in section.blocks -%}
               {%- if block.type == "metafield" -%}
                 {%- assign namespace = block.settings.namespace -%}
                 {%- assign key = block.settings.key -%}
-                {%- assign metafield_value = product.metafields[namespace][key] | default: '' -%}
-                "{{ namespace }}.{{ key }}": {{ metafield_value | json }}{% unless forloop.last %},{% endunless %}
+                {%- assign metafield_raw = product.metafields[namespace][key] | default: '' -%}
+                {% assign meta_type = product.metafields[namespace][key].type %}
+                {%- assign display_value = metafield_raw | escape -%}
+                {% if meta_type == 'volume' %}
+                  {%- assign after_value = metafield_raw | split: '"value":' | last | strip -%}
+                  {%- assign value_part = after_value | split: ',' | first | strip | remove: '"' | remove: ' ' -%}
+
+                  {%- assign after_unit = metafield_raw | split: '"unit":' | last | strip -%}
+                  {%- assign unit_part = after_unit | split: '}' | first | strip | remove: '"' | remove: ' ' -%}
+
+                  {%- assign display_value = value_part | append: ' ' | append: unit_part -%}
+                {% endif %}
+                "{{ namespace }}.{{ key }}": "{{ display_value }}"{% unless forloop.last %},{% endunless %}
               {%- endif -%}
             {%- endfor -%}
           }
         }{% unless forloop.last %},{% endunless %}
       {%- endfor -%}
-    {%- endpaginate -%}
+    {%- else -%}
+      {%- comment -%} All products (fallback) {%- endcomment -%}
+      {%- paginate collections.all.products by 1000 -%}
+        {%- for product in collections.all.products -%}
+          {
+            "id": {{ product.id | json }},
+            "title": {{ product.title | json }},
+            "handle": {{ product.handle | json }},
+            "price": {{ product.price | money | json }},
+            "url": {{ product.url | json }},
+            "vendor": {{ product.vendor | json }},
+            "type": {{ product.type | json }},
+            "variants": {{ product.variants | json }},
+            "featured_image": {
+              "src": {{ product.featured_image | img_url: 'medium' | json }}
+            },
+            "images": {{ product.images | json }},
+            "metafields": {
+             {%- for block in section.blocks -%}
+                {%- if block.type == "metafield" -%}
+                  {%- assign namespace = block.settings.namespace -%}
+                  {%- assign key = block.settings.key -%}
+                  {%- assign metafield_raw = product.metafields[namespace][key] | default: '' -%}
+                  {% assign meta_type = product.metafields[namespace][key].type %}
+                  {%- assign display_value = metafield_raw | escape -%}
+                  {% if meta_type == 'volume' %}
+                    {%- assign after_value = metafield_raw | split: '"value":' | last | strip -%}
+                    {%- assign value_part = after_value | split: ',' | first | strip | remove: '"' | remove: ' ' -%}
+
+                    {%- assign after_unit = metafield_raw | split: '"unit":' | last | strip -%}
+                    {%- assign unit_part = after_unit | split: '}' | first | strip | remove: '"' | remove: ' ' -%}
+
+                    {%- assign display_value = value_part | append: ' ' | append: unit_part -%}
+                  {% endif %}
+                  "{{ namespace }}.{{ key }}": "{{ display_value }}"{% unless forloop.last %},{% endunless %}
+                {%- endif -%}
+              {%- endfor -%}
+            }
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      {%- endpaginate -%}
+    {%- endif -%}
   ]
 }
 </script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+  const currentProduct =  {{ product.id | json }};
+  const recommendedProducts = [];
   // Get current product data with proper metafield handling
-  const currentProduct = {
+  recommendedProducts.push({
+    tag: "Current",
     id: {{ product.id | json }},
     title: {{ product.title | json }},
     price: {{ product.price | money | json }},
@@ -637,17 +825,93 @@ document.addEventListener("DOMContentLoaded", function () {
         {%- if block.type == "metafield" -%}
           {%- assign namespace = block.settings.namespace -%}
           {%- assign key = block.settings.key -%}
-          {%- assign metafield_value = product.metafields[namespace][key] | default: '' -%}
-          "{{ namespace }}.{{ key }}": {{ metafield_value | json }}{% unless forloop.last %},{% endunless %}
+          {%- assign metafield_raw = product.metafields[namespace][key] | default: '' -%}
+          {% assign meta_type = product.metafields[namespace][key].type %}
+          {%- assign display_value = metafield_raw | escape -%}
+          {% if meta_type == 'volume' %}
+            {%- assign after_value = metafield_raw | split: '"value":' | last | strip -%}
+            {%- assign value_part = after_value | split: ',' | first | strip | remove: '"' | remove: ' ' -%}
+
+            {%- assign after_unit = metafield_raw | split: '"unit":' | last | strip -%}
+            {%- assign unit_part = after_unit | split: '}' | first | strip | remove: '"' | remove: ' ' -%}
+
+            {%- assign display_value = value_part | append: ' ' | append: unit_part -%}
+          {% endif %}
+          "{{ namespace }}.{{ key }}": "{{ display_value }}"{% unless forloop.last %},{% endunless %}
         {%- endif -%}
       {%- endfor -%}
     }
-  };
+  });
 
-  console.log('Current product metafields:', currentProduct.metafields);
+{% assign current_product_handle = product.handle %}
+{% assign current_collection = product.collections.first.handle %}
+{% assign source_products = recommendations.products | size  %}
+{% if source_products > 0 %}
+  {% assign product_list = recommendations.products %}
+{% else %}
+  {% assign product_list = collections[current_collection].products %}
+{% endif %}
+{% assign count = 0 %}
+{% for item in product_list %}
+  {% if item.handle != current_product_handle %}
+    {% if count < 4 %}
+      recommendedProducts.push({
+        id: {{ item.id | json }},
+        title: {{ item.title | json }},
+        price: {{ item.price | money | json }},
+        url: {{ item.url | json }},
+        featured_image: {
+          src: {{ item.featured_image | img_url: 'medium' | json }}
+        },
+        vendor: {{ item.vendor | json }},
+        type: {{ item.type | json }},
+        variants: {{ item.variants | json }},
+        handle: {{ item.handle | json }},
+        metafields: {
+          {% assign metafield_index = 0 %}
+          {% for block in section.blocks %}
+            {% if block.type == "metafield" %}
+              {% assign namespace = block.settings.namespace %}
+              {% assign key = block.settings.key %}
+              {% assign raw_metafield = item.metafields[namespace][key] %}
+              {% assign meta_type = raw_metafield.type %}
+              {% assign display_value = raw_metafield | escape %}
 
-  // Initialize comparison with current product
-  initializeComparison(currentProduct);
+              {% if meta_type == "volume" %}
+                {% assign after_value = raw_metafield | split: '"value":' | last | strip %}
+                {% assign value_part = after_value | split: ',' | first | strip | remove: '"' | remove: ' ' %}
+                {% assign after_unit = raw_metafield | split: '"unit":' | last | strip %}
+                {% assign unit_part = after_unit | split: '}' | first | strip | remove: '"' | remove: ' ' %}
+                {% assign display_value = value_part | append: ' ' | append: unit_part %}
+              {% endif %}
+              "{{ namespace }}.{{ key }}": "{{ display_value }}"{% assign metafield_index = metafield_index | plus: 1 %}{% if metafield_index < section.blocks.size %},{% endif %}
+            {% endif %}
+          {% endfor %}
+        }
+      });
+      {% assign count = count | plus: 1 %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+  initializeComparison(recommendedProducts);
+  
+  // NEW: Mobile scroll detection
+  function checkScrollable() {
+    const comparisonRow = document.querySelector('.comparison-row');
+    if (comparisonRow) {
+      const isScrollable = comparisonRow.scrollWidth > comparisonRow.clientWidth;
+      if (isScrollable) {
+        comparisonRow.classList.add('scrollable');
+      } else {
+        comparisonRow.classList.remove('scrollable');
+      }
+    }
+  }
+  
+  // Check on load and resize
+  window.addEventListener('load', checkScrollable);
+  window.addEventListener('resize', checkScrollable);
   
   // Get section settings
   const sectionSettings = {
@@ -667,30 +931,21 @@ document.addEventListener("DOMContentLoaded", function () {
   let filteredProducts = [];
   let searchQuery = '';
   const productsPerPage = 20;
-
-  // Variables for change modal
   let changeCurrentPage = 1;
   let changeSearchQuery = '';
   let productToReplaceId = null;
-  
-  // Get ALL preloaded products data - this is the KEY FIX
   let allPreloadedProducts = [];
   try {
     const preloadedData = JSON.parse(document.getElementById('AllProductsData').textContent);
     allPreloadedProducts = preloadedData.products || [];
     console.log('ALL Preloaded products with metafields:', allPreloadedProducts.length, 'products');
-    
-    // Filter out current product and set as initial allProducts
     allProducts = allPreloadedProducts.filter(product => product.id !== currentProduct.id);
     console.log('Filtered products for comparison:', allProducts.length, 'products');
     
   } catch (error) {
     console.error('Error parsing preloaded products data:', error);
   }
-
-  // Event Delegation for Comparison Container - FIXED: Single event handler for all buttons
   document.getElementById("comparison-container").addEventListener("click", function(e) {
-    // Handle Change buttons
     if (e.target.classList.contains('btn-change')) {
       const productCard = e.target.closest('.product-card');
       if (productCard && !productCard.classList.contains('current')) {
@@ -698,17 +953,13 @@ document.addEventListener("DOMContentLoaded", function () {
         openChangeModal(productId);
       }
     }
-    
-    // Handle Remove buttons
-    if (e.target.classList.contains('remove-btn')) {
+    if (e.target.classList.contains('remove-product_compare--card')) {
       const productCard = e.target.closest('.product-card');
       if (productCard && !productCard.classList.contains('current')) {
         const productId = productCard.getAttribute('data-product-id');
         removeProductFromComparison(productId);
       }
     }
-    
-    // Handle View buttons
     if (e.target.classList.contains('btn-view')) {
       const productCard = e.target.closest('.product-card');
       if (productCard) {
@@ -726,21 +977,15 @@ document.addEventListener("DOMContentLoaded", function () {
     currentPage = 1;
     searchQuery = '';
     document.getElementById("product-search").value = '';
-    
-    // Use preloaded data directly - no API calls needed!
     filterAndDisplayProducts();
     document.getElementById("product-selection-modal").style.display = "block";
   });
-
-  // Close the modal when clicking the X button
   document.querySelectorAll(".close").forEach(closeBtn => {
     closeBtn.addEventListener("click", function() {
       document.getElementById("product-selection-modal").style.display = "none";
       document.getElementById("product-change-modal").style.display = "none";
     });
   });
-
-  // Close the modal when clicking outside of it
   window.addEventListener("click", function (event) {
     const selectionModal = document.getElementById("product-selection-modal");
     const changeModal = document.getElementById("product-change-modal");
@@ -752,28 +997,20 @@ document.addEventListener("DOMContentLoaded", function () {
       changeModal.style.display = "none";
     }
   });
-
-  // Search functionality for selection modal
   document.getElementById("product-search").addEventListener('input', function(e) {
     searchQuery = e.target.value.toLowerCase();
     currentPage = 1;
     filterAndDisplayProducts();
   });
-
-  // Search functionality for change modal
   document.getElementById("change-product-search").addEventListener('input', function(e) {
     changeSearchQuery = e.target.value.toLowerCase();
     changeCurrentPage = 1;
     filterAndDisplayChangeProducts();
   });
-
-  // Load more products for selection modal
   document.getElementById("load-more-button").addEventListener('click', function() {
     currentPage++;
     filterAndDisplayProducts();
   });
-
-  // Load more products for change modal
   document.getElementById("change-load-more-button").addEventListener('click', function() {
     changeCurrentPage++;
     filterAndDisplayChangeProducts();
@@ -798,7 +1035,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const productList = document.getElementById("product-selection-list");
     const loadMoreButton = document.getElementById("load-more-button");
     const paginationInfo = document.getElementById("pagination-info");
-    
     // Apply search filter
     if (searchQuery) {
       filteredProducts = allProducts.filter(product => 
@@ -879,30 +1115,29 @@ document.addEventListener("DOMContentLoaded", function () {
           imageUrl = `https://${window.location.hostname}${imageUrl}`;
         }
       }
-      
-      // Replace image size if needed
-      imageUrl = imageUrl.replace(/_(large|grande|medium|small)\./, '_small.');
-      
+      {% comment %} imageUrl = imageUrl.replace(/_(large|grande|medium|small)\./, '_small.'); {% endcomment %}
       const productTitle = product.title || 'Untitled Product';
       const productPrice = formatProductPrice(product);
       const productHandle = product.handle || '';
-      
-      // Check if product is already in comparison
       const isInComparison = comparisonProducts.includes(product.id);
       const buttonText = isInComparison ? 'Added' : 'Add to Comparison';
       const buttonClass = isInComparison ? 'add-to-comparison added' : 'add-to-comparison';
       
       productOption.innerHTML = `
-        <img src="${imageUrl}" alt="${imageAlt}" width="120" height="120" style="object-fit: cover;" onerror="this.src='/assets/no-image.jpg'">
-        <p style="margin: 10px 0; font-weight: bold;">${productTitle.length > 50 ? productTitle.substring(0, 50) + '...' : productTitle}</p>
-        <p style="margin: 5px 0; color: #333; font-weight: bold;">${productPrice}</p>
-        <button data-product-id="${product.id}" data-product-handle="${productHandle}" class="${buttonClass}">${buttonText}</button>
+        <div class="product_compare--popup">
+          <div class="product_compare--popup-box">
+            <img src="${imageUrl}" alt="${imageAlt}" class="product_compare--popup_image" onerror="this.src='/assets/no-image.jpg'">
+            <h3 class="product_compare--popup_title">${productTitle.length > 50 ? productTitle.substring(0, 50) + '...' : productTitle}</h3>
+            <p class="product_compare--popup_price">${productPrice}</p>
+          </div>
+          <div class="product_added-to-compare_btn">
+            <button data-product-id="${product.id}" data-product-handle="${productHandle}" class="${buttonClass}">${buttonText}</button>
+          </div>
+        </div>
       `;
       
       productList.appendChild(productOption);
     });
-    
-    // Add event listeners to the "Add to Comparison" buttons using event delegation
     productList.addEventListener('click', function(e) {
       if (e.target.classList.contains('add-to-comparison')) {
         const productId = e.target.getAttribute("data-product-id");
@@ -921,54 +1156,85 @@ document.addEventListener("DOMContentLoaded", function () {
             addProductToComparison(product);
             e.target.textContent = 'Added';
             e.target.classList.add('added');
+            // NEW: Check scrollable after adding product
+            setTimeout(checkScrollable, 100);
           }
         }
       }
     });
   }
-
-  // Function to initialize the comparison with the current product
-  function initializeComparison(product) {
+  function initializeComparison(products) {
     const comparisonContainer = document.getElementById("comparison-container");
-    
-    // Get metafield values for current product
-    const specsHTML = generateSpecsHTML(product);
-    
-    comparisonContainer.innerHTML = `
-      <div class="product-card current" data-product-id="${product.id}">
-        <div class="product-badge">Current</div>
-        <img src="${product.featured_image.src}" alt="${product.title}" class="product-image">
-        <div class="product-name">${product.title.length > 30 ? product.title.substring(0, 30) + '...' : product.title}</div>
-        <p>${product.price}</p>
-        <div class="product-specs">
-          ${specsHTML}
-        </div>
-        <div class="product-actions-new">
-          <button class="btn-view">View Product</button>
-        </div>
-      </div>
-    `;
-  }
+    comparisonContainer.innerHTML = "";
 
-  // Function to add a product to the comparison - FIXED: Removed individual event listeners
+    products.forEach(product => {
+      const specsHTML = generateSpecsHTML(product);
+      const productTitle = product.title || "";
+      const imageUrl = product.featured_image?.src || "/assets/no-image.jpg";
+
+      let productCardHTML = '';
+
+      if (product.tag) {
+        productCardHTML = `
+          <div class="product-card" data-product-id="${product.id}">
+            <div class="product_compare--card current">
+              <div class="product_compare--card_badge">${product.tag}</div>
+              <div class="product_compare--card_image">
+                <img src="${imageUrl}" alt="${productTitle}" class="product_compare--card-image" onerror="this.src='/assets/no-image.jpg'">
+              </div>
+              <div class="product-compare_card--title">
+                ${productTitle.length > 30 ? productTitle.substring(0, 30) + '...' : productTitle}
+              </div>
+              <p class="product-compare_card--price">${product.price}</p>
+            </div>
+            <div class="product-specs">
+              ${specsHTML}
+            </div>
+          </div>
+        `;
+      } else {
+        // Template when product.tag does NOT exist
+        productCardHTML = `
+          <div class="product-card" data-product-id="${product.id}">
+            <div class="product_compare--card">
+              <button class="remove-product_compare--card">×</button>
+              <div class="product_compare--card_image">
+                <img src="${imageUrl}" alt="${productTitle}" class="product_compare--card-image" onerror="this.src='/assets/no-image.jpg'">
+              </div>
+              <div class="product-compare_card--title">
+                ${productTitle.length > 30 ? productTitle.substring(0, 30) + '...' : productTitle}
+              </div>
+              <p class="product-compare_card--price">${product.price}</p>
+            </div>
+            <div class="product-specs">
+              ${specsHTML}
+            </div>
+            <div class="product-actions-new">
+              <button class="btn-view">View Product</button>
+              <button class="btn-change">Change</button>
+            </div>
+          </div>
+        `;
+      }
+
+      comparisonContainer.innerHTML += productCardHTML;
+    });
+    
+    // NEW: Check if scrollable after initialization
+    setTimeout(checkScrollable, 100);
+  }
   function addProductToComparison(product) {
     const comparisonContainer = document.getElementById("comparison-container");
-    
-    // Check if product is already in comparison
     const existingProduct = comparisonContainer.querySelector(`[data-product-id="${product.id}"]`);
     if (existingProduct) {
       alert('This product is already in the comparison.');
       return;
     }
-    
-    // Limit the number of comparison products
     const comparisonProducts = comparisonContainer.querySelectorAll('.product-card');
     if (comparisonProducts.length >= sectionSettings.maxProducts) {
       alert(`Maximum number of comparison products (${sectionSettings.maxProducts}) reached. Please remove one before adding another.`);
       return;
     }
-    
-    // Get image URL for the comparison display
     let imageUrl = '/assets/no-image.jpg';
     if (product.featured_image) {
       if (typeof product.featured_image === 'string') {
@@ -986,18 +1252,20 @@ document.addEventListener("DOMContentLoaded", function () {
     
     const productTitle = product.title || 'Untitled Product';
     const productHandle = product.handle || '';
-    
-    // Get metafield values
     const productCode = getMetafieldValue(product, 'custom', 'product_code') || 'HP' + (1000 + comparisonProducts.length);
     const productModel = getMetafieldValue(product, 'custom', 'product_model') || 'E' + (14000 + comparisonProducts.length);
     const specsHTML = generateSpecsHTML(product);
     
     const productHTML = `
       <div class="product-card" data-product-id="${product.id}">
-        <button class="remove-btn">×</button>
-        <img src="${imageUrl}" alt="${productTitle}" class="product-image" onerror="this.src='/assets/no-image.jpg'">
-        <div class="product-name">${productTitle.length > 30 ? product.title.substring(0, 30) + '...' : productTitle}</div>
-        <p>${product.price}</p>
+        <div class="product_compare--card">
+          <button class="remove-product_compare--card">×</button>
+          <div class="product_compare--card_image">
+            <img src="${imageUrl}" alt="${productTitle}" class="product_compare--card-image" onerror="this.src='/assets/no-image.jpg'">
+          </div>
+          <div class="product-compare_card--title">${productTitle.length > 30 ? product.title.substring(0, 30) + '...' : productTitle}</div>
+          <p class="product-compare_card--price">${product.price}</p>
+        </div>
         <div class="product-specs">
           ${specsHTML}
         </div>
@@ -1009,28 +1277,23 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     
     comparisonContainer.innerHTML += productHTML;
-    
-    // REMOVED: Individual event listeners - now handled by event delegation
-    
-    // Update all "Add to Comparison" buttons in the modal
     updateAddToComparisonButtons();
-    
-    // Close the modal after adding if we've reached the max
     if (comparisonContainer.querySelectorAll('.product-card').length >= sectionSettings.maxProducts) {
       document.getElementById("product-selection-modal").style.display = "none";
     }
+    
+    // NEW: Check scrollable after adding
+    setTimeout(checkScrollable, 100);
   }
-
-  // Function to remove a product from comparison
   function removeProductFromComparison(productId) {
     const productElement = document.querySelector(`[data-product-id="${productId}"]`);
     if (productElement && !productElement.classList.contains('current')) {
       productElement.remove();
       updateAddToComparisonButtons();
+      // NEW: Check scrollable after removal
+      setTimeout(checkScrollable, 100);
     }
   }
-
-  // Function to get all product IDs currently in comparison
   function getComparisonProductIds() {
     const comparisonContainer = document.getElementById("comparison-container");
     const productItems = comparisonContainer.querySelectorAll('.product-card');
@@ -1042,8 +1305,6 @@ document.addEventListener("DOMContentLoaded", function () {
     
     return productIds;
   }
-
-  // Function to update all "Add to Comparison" buttons in the modal
   function updateAddToComparisonButtons() {
     const comparisonProductIds = getComparisonProductIds();
     
@@ -1059,8 +1320,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-
-  // Function to open the change modal
   function openChangeModal(productId) {
     productToReplaceId = productId;
     changeCurrentPage = 1;
@@ -1070,14 +1329,10 @@ document.addEventListener("DOMContentLoaded", function () {
     filterAndDisplayChangeProducts();
     document.getElementById("product-change-modal").style.display = "block";
   }
-
-  // Function to filter and display products in the change modal
   function filterAndDisplayChangeProducts() {
     const productList = document.getElementById("product-change-list");
     const loadMoreButton = document.getElementById("change-load-more-button");
     const paginationInfo = document.getElementById("change-pagination-info");
-    
-    // Apply search filter
     let changeFilteredProducts;
     if (changeSearchQuery) {
       changeFilteredProducts = allProducts.filter(product => 
@@ -1086,26 +1341,18 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       changeFilteredProducts = [...allProducts];
     }
-    
-    // Filter out products already in comparison (except the one being replaced)
     const comparisonProductIds = getComparisonProductIds();
     changeFilteredProducts = changeFilteredProducts.filter(product => 
       !comparisonProductIds.includes(product.id) || product.id === productToReplaceId
     );
     
     console.log('Filtered products for change:', changeFilteredProducts.length);
-    
-    // Display products with pagination
     displayProductsForChange(changeFilteredProducts);
-    
-    // Update pagination info
     const startIndex = (changeCurrentPage - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
     const totalPages = Math.ceil(changeFilteredProducts.length / productsPerPage);
     
     paginationInfo.textContent = `Showing ${Math.min(endIndex, changeFilteredProducts.length)} of ${changeFilteredProducts.length} products`;
-    
-    // Show/hide load more button
     if (changeCurrentPage < totalPages) {
       loadMoreButton.style.display = 'block';
       loadMoreButton.disabled = false;
@@ -1113,38 +1360,27 @@ document.addEventListener("DOMContentLoaded", function () {
       loadMoreButton.style.display = 'none';
     }
   }
-
-  // Function to display products in the change modal
   function displayProductsForChange(products) {
     const productList = document.getElementById("product-change-list");
-    
     if (!products || products.length === 0) {
       productList.innerHTML = '<div class="no-products">No products found matching your search.</div>';
       return;
     }
-    
-    // Calculate pagination
     const startIndex = (changeCurrentPage - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
     const productsToShow = products.slice(startIndex, endIndex);
-    
-    // If we're on page 1, clear the list, otherwise append
     if (changeCurrentPage === 1) {
       productList.innerHTML = '';
     }
     
     productsToShow.forEach(product => {
-      // Skip if product already exists in the list
       if (document.querySelector(`#product-change-list [data-product-id="${product.id}"]`)) {
         return;
       }
-      
       const productOption = document.createElement('div');
       productOption.className = 'product-option';
       productOption.setAttribute('data-product-id', product.id);
       productOption.setAttribute('data-product-handle', product.handle);
-      
-      // Get the correct image URL
       let imageUrl = '/assets/no-image.jpg';
       let imageAlt = product.title || 'Product image';
       
@@ -1161,42 +1397,32 @@ document.addEventListener("DOMContentLoaded", function () {
           imageUrl = product.images[0].src;
         }
       }
-      
-      // Ensure we have a proper Shopify image URL
       if (!imageUrl.startsWith('http') && !imageUrl.startsWith('//')) {
         if (imageUrl.startsWith('/')) {
           imageUrl = `https://${window.location.hostname}${imageUrl}`;
         }
       }
-      
-      // Replace image size if needed
-      imageUrl = imageUrl.replace(/_(large|grande|medium|small)\./, '_small.');
-      
+      {% comment %} imageUrl = imageUrl.replace(/_(large|grande|medium|small)\./, '_small.'); {% endcomment %}
       const productTitle = product.title || 'Untitled Product';
       const productPrice = formatProductPrice(product);
       
       productOption.innerHTML = `
-        <img src="${imageUrl}" alt="${imageAlt}" width="120" height="120" style="object-fit: cover;" onerror="this.src='/assets/no-image.jpg'">
-        <p style="margin: 10px 0; font-weight: bold;">${productTitle.length > 50 ? productTitle.substring(0, 50) + '...' : productTitle}</p>
-        <p style="margin: 5px 0; color: #333; font-weight: bold;">${productPrice}</p>
+        <div class="product_compare--popup product_compare--popup_change">
+          <div class="product_compare--popup-box">
+            <img src="${imageUrl}" alt="${imageAlt}" class="product_compare--popup_image" onerror="this.src='/assets/no-image.jpg'">
+            <h3 class="product_compare--popup_title">${productTitle.length > 50 ? productTitle.substring(0, 50) + '...' : productTitle}</h3>
+            <p class="product_compare--popup_price">${productPrice}</p>
+          </div>
+        </div>
       `;
       
       productList.appendChild(productOption);
-      
-      // Add click event to select product for replacement
       productOption.addEventListener('click', function() {
-        // Remove selected class from all options
         document.querySelectorAll('#product-change-list .product-option').forEach(option => {
           option.classList.remove('selected');
         });
-        
-        // Add selected class to clicked option
         this.classList.add('selected');
-        
-        // Replace the product in comparison
         replaceProductInComparison(productToReplaceId, product);
-        
-        // Close the modal after a short delay
         setTimeout(() => {
           document.getElementById("product-change-modal").style.display = "none";
         }, 500);
@@ -1204,46 +1430,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Function to replace a product in the comparison
   function replaceProductInComparison(oldProductId, newProduct) {
-    // Remove the old product
     removeProductFromComparison(oldProductId);
-    
-    // Add the new product
     addProductToComparison(newProduct);
-    
-    // Update the modal buttons
     updateAddToComparisonButtons();
   }
 
   // Function to get metafield value
   function getMetafieldValue(product, namespace, key) {
     if (!product.metafields) return null;
-    
-    // Try different ways to access metafield value
     const metafieldKey = `${namespace}.${key}`;
-    
-    // Method 1: Check combined namespace.key
     if (product.metafields[metafieldKey] !== undefined && product.metafields[metafieldKey] !== null && product.metafields[metafieldKey] !== '') {
       return product.metafields[metafieldKey];
     }
-    // Method 2: Check nested structure
     else if (product.metafields[namespace] && product.metafields[namespace][key] !== undefined && product.metafields[namespace][key] !== null && product.metafields[namespace][key] !== '') {
       return product.metafields[namespace][key];
     }
-    // Method 3: Check direct key
     else if (product.metafields[key] !== undefined && product.metafields[key] !== null && product.metafields[key] !== '') {
       return product.metafields[key];
     }
     
     return null;
   }
-
-  // Function to generate specs HTML from metafields
   function generateSpecsHTML(product) {
     let specsHTML = '';
-    
-    // Get metafield blocks from section settings
     const metafieldBlocks = [];
     {% if section.blocks %}
       {% for block in section.blocks %}
@@ -1268,7 +1478,7 @@ document.addEventListener("DOMContentLoaded", function () {
       
       if (namespace && key) {
         const metafieldValue = getMetafieldValue(product, namespace, key);
-        
+        console.log('metafieldValue', typeof metafieldValue);
         // If we found a metafield value, display it
         if (metafieldValue) {
           specsHTML += `
@@ -1286,54 +1496,36 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    
-    // If no metafields found, show default specs
     if (!specsHTML) {
       specsHTML = ``;
     }
-    
     return specsHTML;
   }
-
-  // Helper function to get all products (including current)
   function getAllProducts() {
     return [currentProduct, ...allProducts];
   }
-
-  // Improved function to format product price
   function formatProductPrice(product) {
-    // Check different possible price properties in Shopify JSON response
     let price = null;
-    
-    // Try different price properties
     if (product.price) {
       price = product.price;
     } else if (product.variants && product.variants.length > 0) {
       price = product.variants[0].price;
     }
-    
-    // If we found a price, format it
     if (price) {
-      // Check if price is already formatted (string with currency symbol)
       if (typeof price === 'string' && (price.includes('$') || price.includes('€') || price.includes('£'))) {
         return price;
       }
-      
-      // If price is a number (in cents), convert to dollars
       if (typeof price === 'number') {
-        // Check if price is in cents (typical Shopify format) or dollars
-        if (price > 1000) { // If price is more than $10, assume it's in cents
+        if (price > 1000) {
           return '$' + (price / 100).toFixed(2);
         } else {
           return '$' + price.toFixed(2);
         }
       }
-      
-      // If price is a string but doesn't contain currency symbol
       if (typeof price === 'string') {
         const numPrice = parseFloat(price);
         if (!isNaN(numPrice)) {
-          if (numPrice > 1000) { // Assume cents
+          if (numPrice > 1000) {
             return '£' + (numPrice / 100).toFixed(2);
           } else {
             return '£' + numPrice.toFixed(2);
@@ -1341,12 +1533,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     }
-    
-    // If we can't determine the price, show a fallback
     return 'Price unavailable';
   }
 });
 </script>
+
 {% schema %}
 {
   "name": "Custom Product Comparison",
@@ -1582,24 +1773,6 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     {
       "type": "text",
-      "id": "modal_padding",
-      "label": "Modal Padding",
-      "default": "20px"
-    },
-    {
-      "type": "text",
-      "id": "modal_max_width",
-      "label": "Modal Maximum Width",
-      "default": "800px"
-    },
-    {
-      "type": "text",
-      "id": "modal_border_radius",
-      "label": "Modal Border Radius",
-      "default": "8px"
-    },
-    {
-      "type": "text",
       "id": "modal_overlay_opacity",
       "label": "Modal Overlay Opacity",
       "default": "0.5"
@@ -1615,12 +1788,6 @@ document.addEventListener("DOMContentLoaded", function () {
       "id": "close_button_hover_color",
       "label": "Close Button Hover Color",
       "default": "#000"
-    },
-    {
-      "type": "text",
-      "id": "close_button_size",
-      "label": "Close Button Size",
-      "default": "28px"
     },
     {
       "type": "header",
@@ -1667,66 +1834,6 @@ document.addEventListener("DOMContentLoaded", function () {
     {
       "type": "header",
       "content": "Modal Product Grid"
-    },
-    {
-      "type": "text",
-      "id": "modal_product_min_width",
-      "label": "Modal Product Minimum Width",
-      "default": "150px"
-    },
-    {
-      "type": "text",
-      "id": "modal_grid_gap",
-      "label": "Modal Grid Gap",
-      "default": "15px"
-    },
-    {
-      "type": "color",
-      "id": "modal_product_bg_color",
-      "label": "Modal Product Background Color",
-      "default": "#FFF"
-    },
-    {
-      "type": "color",
-      "id": "modal_product_border_color",
-      "label": "Modal Product Border Color",
-      "default": "#eee"
-    },
-    {
-      "type": "text",
-      "id": "modal_product_border_radius",
-      "label": "Modal Product Border Radius",
-      "default": "5px"
-    },
-    {
-      "type": "text",
-      "id": "modal_product_padding",
-      "label": "Modal Product Padding",
-      "default": "10px"
-    },
-    {
-      "type": "color",
-      "id": "modal_product_title_color",
-      "label": "Modal Product Title Color",
-      "default": "#000"
-    },
-    {
-      "type": "text",
-      "id": "modal_product_title_font_size",
-      "label": "Modal Product Title Font Size",
-      "default": "14px"
-    },
-    {
-      "type": "color",
-      "id": "modal_product_price_color",
-      "label": "Modal Product Price Color",
-      "default": "#333"
-    },
-    {
-      "type": "text",
-      "id": "modal_product_price_font_size",
-      "label": "Modal Product Price Font Size",
-      "default": "14px"
     },
     {
       "type": "header",
@@ -1890,65 +1997,7 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     {
       "type": "header",
-      "content": "Load More Button"
-    },
-    {
-      "type": "color",
-      "id": "load_more_button_bg_color",
-      "label": "Load More Button Background Color",
-      "default": "#007bff"
-    },
-    {
-      "type": "color",
-      "id": "load_more_button_text_color",
-      "label": "Load More Button Text Color",
-      "default": "#FFF"
-    },
-    {
-      "type": "color",
-      "id": "load_more_button_hover_bg_color",
-      "label": "Load More Button Hover Background Color",
-      "default": "#0056b3"
-    },
-    {
-      "type": "color",
-      "id": "load_more_button_disabled_bg_color",
-      "label": "Load More Button Disabled Background Color",
-      "default": "#cccccc"
-    },
-    {
-      "type": "text",
-      "id": "load_more_button_padding",
-      "label": "Load More Button Padding",
-      "default": "10px 20px"
-    },
-    {
-      "type": "text",
-      "id": "load_more_button_border_radius",
-      "label": "Load More Button Border Radius",
-      "default": "4px"
-    },
-    {
-      "type": "text",
-      "id": "load_more_button_font_size",
-      "label": "Load More Button Font Size",
-      "default": "16px"
-    },
-    {
-      "type": "text",
-      "id": "pagination_font_size",
-      "label": "Pagination Info Font Size",
-      "default": "14px"
-    },
-    {
-      "type": "header",
       "content": "Product Images"
-    },
-    {
-      "type": "text",
-      "id": "product_image_border_radius",
-      "label": "Product Image Border Radius",
-      "default": "0px"
     },
     {
       "type": "header",
