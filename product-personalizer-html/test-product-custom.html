@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Shirt Designer</title>
+    <style>
+        /* All your existing CSS remains the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .personalizer-container {
+            max-width: 1200px;
+            width: 100%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .personalizer-header {
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .personalizer-h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .personalizer-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .personalizer-designer-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        .personalizer-canvas-container {
+            flex: 3;
+            min-width: 300px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .personalizer-design-canvas {
+            width: 100%;
+            max-width: 500px;
+            height: 500px;
+            border: 2px dashed #4b6cb7;
+            border-radius: 10px;
+            position: relative;
+            background-color: #f9f9f9;
+            overflow: hidden;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .personalizer-shirt-base {
+            width: 70%;
+            max-width: 350px;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            object-fit: contain;
+        }
+        
+        .personalizer-accessory-container {
+            position: absolute;
+            z-index: 2;
+            user-select: none;
+            transform-origin: center;
+        }
+        
+        .personalizer-text-container {
+            position: absolute;
+            z-index: 2;
+            user-select: none;
+            transform-origin: center;
+            cursor: move;
+            padding: 5px 10px;
+        }
+        
+        .personalizer-text-element {
+            font-size: 24px;
+            font-weight: bold;
+            white-space: nowrap;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none; /* Important: Prevent text element from blocking drag */
+        }
+        
+        .personalizer-accessory {
+            width: 100%;
+            height: 100%;
+            cursor: move;
+            object-fit: contain;
+        }
+        
+        .personalizer-accessory-controls {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .personalizer-text-controls {
+            position: absolute;
+            top: -35px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .personalizer-accessory-container:hover .personalizer-accessory-controls,
+        .personalizer-text-container:hover .personalizer-text-controls {
+            opacity: 1;
+        }
+        
+        .personalizer-control-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #4b6cb7;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            border: none;
+            transition: all 0.2s;
+        }
+        
+        .personalizer-control-btn:hover {
+            background: #3a5795;
+            transform: scale(1.1);
+        }
+        
+        .personalizer-delete-btn {
+            background: #e74c3c;
+        }
+        
+        .personalizer-delete-btn:hover {
+            background: #c0392b;
+        }
+        
+        .personalizer-controls {
+            flex: 2;
+            min-width: 300px;
+            padding: 20px;
+            background-color: #f5f7fa;
+            border-radius: 10px;
+        }
+        
+        .personalizer-control-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+        
+        .personalizer-h2 {
+            color: #182848;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .personalizer-color-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .personalizer-color-option {
+            display: flex;
+            width: 40px;
+            height: 40px;
+            border: 2px solid black;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50px;
+            padding: 2px;
+            cursor: pointer;
+        }
+        .personalizer-color-option img {
+            width: 25px;
+            height: 25px;
+            border-radius: 50px;
+            object-fit: cover;
+        }
+        
+        .personalizer-color-option.active {
+            border-color: #4b6cb7;
+        }
+        
+        .personalizer-accessory-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .personalizer-accessory-option {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid #e1e1e1;
+            transition: all 0.2s;
+        }
+        
+        .personalizer-accessory-option:hover {
+            border-color: #4b6cb7;
+            transform: translateY(-5px);
+        }
+        
+        .personalizer-accessory-option img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .personalizer-accessory-option span {
+            margin-top: 5px;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        
+        .personalizer-upload-option {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .personalizer-upload-option:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+        
+        .personalizer-text-option {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .personalizer-text-option:hover {
+            background: linear-gradient(135deg, #e668e8 0%, #e2455a 100%);
+        }
+        
+        .personalizer-sub-options {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .personalizer-sub-options.active {
+            display: block;
+        }
+        
+        .personalizer-sub-options-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #182848;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4b6cb7;
+            text-align: center;
+        }
+        
+        .personalizer-sub-options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .personalizer-sub-option {
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid #e1e1e1;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .personalizer-sub-option:hover {
+            border-color: #4b6cb7;
+            transform: scale(1.05);
+        }
+        
+        .personalizer-sub-option img {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+        }
+        
+        .personalizer-sub-option span {
+            margin-top: 5px;
+            font-size: 0.7rem;
+            text-align: center;
+        }
+        
+        .personalizer-action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .personalizer-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .personalizer-btn-primary {
+            background-color: #4b6cb7;
+            color: white;
+        }
+        
+        .personalizer-btn-primary:hover {
+            background-color: #3a5795;
+            transform: translateY(-2px);
+        }
+        
+        .personalizer-btn-secondary {
+            background-color: #e1e1e1;
+            color: #333;
+        }
+        
+        .personalizer-btn-secondary:hover {
+            background-color: #d1d1d1;
+            transform: translateY(-2px);
+        }
+        
+        .personalizer-instructions {
+            background-color: #f0f4ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .personalizer-instructions h3 {
+            color: #4b6cb7;
+            margin-bottom: 10px;
+        }
+        
+        .personalizer-instructions ul {
+            padding-left: 20px;
+        }
+        
+        .personalizer-instructions li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .personalizer-footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Loading indicator for download */
+        .personalizer-loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            flex-direction: column;
+        }
+        
+        .personalizer-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .personalizer-file-input {
+            display: none;
+        }
+
+        .personalizer-uploaded-accessories {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .personalizer-uploaded-accessories h4 {
+            color: #182848;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .personalizer-uploaded-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* Text customization styles */
+        .personalizer-text-customization {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .personalizer-text-customization.active {
+            display: block;
+        }
+
+        .personalizer-text-input-group {
+            margin-bottom: 15px;
+        }
+
+        .personalizer-text-input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #182848;
+        }
+
+        .personalizer-text-input-group input,
+        .personalizer-text-input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .personalizer-text-input-group input:focus,
+        .personalizer-text-input-group select:focus {
+            outline: none;
+            border-color: #4b6cb7;
+        }
+
+        .personalizer-font-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .personalizer-font-option {
+            flex: 1;
+            min-width: 80px;
+            padding: 8px 5px;
+            border: 2px solid #e1e1e1;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .personalizer-font-option:hover {
+            border-color: #4b6cb7;
+        }
+
+        .personalizer-font-option.active {
+            border-color: #4b6cb7;
+            background-color: #4b6cb7;
+            color: white;
+        }
+
+        .personalizer-color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .personalizer-color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #e1e1e1;
+            transition: all 0.2s;
+        }
+
+        .personalizer-color-swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .personalizer-color-swatch.active {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .personalizer-add-text-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .personalizer-add-text-btn:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            transform: translateY(-2px);
+        }
+
+        /* X icon for uploaded accessories */
+        .personalizer-remove-upload-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .personalizer-sub-option:hover .personalizer-remove-upload-btn {
+            opacity: 1;
+        }
+
+        .personalizer-remove-upload-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        /* Live preview text */
+        .personalizer-live-preview-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            white-space: nowrap;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 3;
+        }
+
+        .personalizer-live-preview-text.visible {
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .personalizer-designer-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .personalizer-canvas-container, .personalizer-controls {
+                width: 100%;
+                max-width: 600px;
+            }
+            
+            .personalizer-design-canvas {
+                height: 400px;
+                max-width: 400px;
+            }
+            
+            .personalizer-shirt-base {
+                width: 60%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .personalizer-container {
+                margin: 10px 0;
+                border-radius: 10px;
+            }
+            
+            .personalizer-header {
+                padding: 15px;
+            }
+            
+            .personalizer-h1 {
+                font-size: 2rem;
+            }
+            
+            .personalizer-designer-container {
+                padding: 15px;
+            }
+            
+            .personalizer-canvas-container, .personalizer-controls {
+                padding: 15px;
+            }
+            
+            .personalizer-design-canvas {
+                height: 350px;
+                max-width: 350px;
+            }
+            
+            .personalizer-shirt-base {
+                width: 70%;
+            }
+            
+            .personalizer-accessory-options {
+                justify-content: center;
+            }
+            
+            .personalizer-accessory-option {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .personalizer-action-buttons {
+                flex-direction: column;
+            }
+            
+            .personalizer-btn {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .personalizer-design-canvas {
+                height: 300px;
+                max-width: 300px;
+            }
+            
+            .personalizer-shirt-base {
+                width: 80%;
+            }
+            
+            .personalizer-accessory-option {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .personalizer-accessory-option img {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .personalizer-sub-option {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .personalizer-sub-option img {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .personalizer-font-option {
+                min-width: 60px;
+                font-size: 14px;
+            }
+            
+            .personalizer-h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .personalizer-design-canvas {
+                height: 250px;
+                max-width: 250px;
+            }
+            
+            .personalizer-accessory-options {
+                gap: 10px;
+            }
+            
+            .personalizer-accessory-option {
+                width: 55px;
+                height: 55px;
+            }
+            
+            .personalizer-sub-options-grid {
+                gap: 8px;
+            }
+            
+            .personalizer-sub-option {
+                width: 55px;
+                height: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="personalizer-loading" id="personalizer-loadingIndicator">
+        <div class="personalizer-spinner"></div>
+        Generating your design... Please wait
+    </div>
+    <input type="file" id="personalizer-imageUpload" class="personalizer-file-input" accept="image/*">
+    <div class="personalizer-container">
+        <header class="personalizer-header">
+            <h1 class="personalizer-h1">Custom Shirt Designer</h1>
+            <p class="personalizer-subtitle">Design your perfect shirt with custom colors and accessories</p>
+        </header>
+        
+        <div class="personalizer-designer-container">
+            <div class="personalizer-canvas-container">
+                <div class="personalizer-design-canvas" id="personalizer-designCanvas">
+                    <img src="./white.png" alt="Shirt" class="personalizer-shirt-base" id="personalizer-shirtBase">
+                    <!-- Live preview text -->
+                    <div class="personalizer-live-preview-text" id="personalizer-livePreviewText"></div>
+                </div>
+                <div class="personalizer-action-buttons">
+                    <button class="personalizer-btn personalizer-btn-primary" id="personalizer-downloadDesign">Download Design</button>
+                    <button class="personalizer-btn personalizer-btn-secondary" id="personalizer-resetDesign">Reset Design</button>
+                </div>
+            </div>
+            
+            <div class="personalizer-controls">
+                <div class="personalizer-control-section">
+                    <h2 class="personalizer-h2">Shirt Color</h2>
+                    <div class="personalizer-color-options">
+                        <div class="personalizer-color-option active" data-image="./white.png">
+                            <img src="./white.png" alt="White">
+                        </div>
+                        <div class="personalizer-color-option" data-image="./yellow.png">
+                            <img src="./yellow.png" alt="Yellow">
+                        </div>
+                        <div class="personalizer-color-option" data-image="./red.png">
+                            <img src="./red.png" alt="Red">
+                        </div>
+                        <div class="personalizer-color-option" data-image="./green.png">
+                            <img src="./green.png" alt="Green">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="personalizer-control-section">
+                    <h2 class="personalizer-h2">Add Accessories</h2>
+                    <div class="personalizer-accessory-options">
+                        <div class="personalizer-accessory-option" data-type="tie">
+                            <img src="./tie.png" alt="Tie">
+                            <span>Tie</span>
+                        </div>
+                        <div class="personalizer-accessory-option" data-type="pocket">
+                            <img src="./pocket-1.png" alt="Pocket">
+                            <span>Pocket</span>
+                        </div>
+                        <div class="personalizer-accessory-option personalizer-upload-option" id="personalizer-uploadAccessory">
+                            <div style="font-size: 24px; margin-bottom: 5px;">📁</div>
+                            <span>Upload</span>
+                        </div>
+                        <div class="personalizer-accessory-option personalizer-text-option" id="personalizer-addTextOption" data-type="text">
+                            <div style="font-size: 24px; margin-bottom: 5px;">✏️</div>
+                            <span>Add Text</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Tie Sub-options with Heading -->
+                    <div class="personalizer-sub-options" id="personalizer-tieOptions">
+                        <div class="personalizer-sub-options-header">Tie Designs</div>
+                        <div class="personalizer-sub-options-grid">
+                            <div class="personalizer-sub-option" data-src="./tie.png" data-type="tie">
+                                <img src="./tie.png" alt="Classic Tie">
+                                <span>Classic</span>
+                            </div>
+                            <div class="personalizer-sub-option" data-src="./tie.png" data-type="tie">
+                                <img src="./tie.png" alt="Bow Tie">
+                                <span>Bow Tie</span>
+                            </div>
+                            <div class="personalizer-sub-option" data-src="./tie.png" data-type="tie">
+                                <img src="./tie.png" alt="Skinny Tie">
+                                <span>Skinny</span>
+                            </div>
+                            <div class="personalizer-sub-option" data-src="./tie.png" data-type="tie">
+                                <img src="./tie.png" alt="Patterned Tie">
+                                <span>Patterned</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pocket Sub-options with Heading -->
+                    <div class="personalizer-sub-options" id="personalizer-pocketOptions">
+                        <div class="personalizer-sub-options-header">Pocket Designs</div>
+                        <div class="personalizer-sub-options-grid">
+                            <div class="personalizer-sub-option" data-src="./pocket-1.png" data-type="pocket">
+                                <img src="./pocket-1.png" alt="Standard Pocket">
+                                <span>Standard</span>
+                            </div>
+                            <div class="personalizer-sub-option" data-src="./pocket-2.png" data-type="pocket">
+                                <img src="./pocket-2.png" alt="Flap Pocket">
+                                <span>Flap</span>
+                            </div>
+                            <div class="personalizer-sub-option" data-src="./pocket-3.png" data-type="pocket">
+                                <img src="./pocket-3.png" alt="Chest Pocket">
+                                <span>Chest</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded Accessories Section -->
+                    <div class="personalizer-uploaded-accessories" id="personalizer-uploadedAccessories" style="display: none;">
+                        <h4>Uploaded Accessories</h4>
+                        <div class="personalizer-uploaded-options" id="personalizer-uploadedOptions">
+                        </div>
+                    </div>
+
+                    <!-- Text Customization Section -->
+                    <div class="personalizer-text-customization" id="personalizer-textCustomization">
+                        <h4>Add Custom Text</h4>
+                        <div class="personalizer-text-input-group">
+                            <label for="personalizer-textInput">Enter Text:</label>
+                            <input type="text" id="personalizer-textInput" placeholder="Enter your text here" maxlength="50">
+                        </div>
+                        
+                        <div class="personalizer-text-input-group">
+                            <label>Font Style:</label>
+                            <div class="personalizer-font-options">
+                                <div class="personalizer-font-option active" data-font="Arial" style="font-family: Arial;">Aa</div>
+                                <div class="personalizer-font-option" data-font="Times New Roman" style="font-family: 'Times New Roman';">Aa</div>
+                                <div class="personalizer-font-option" data-font="Courier New" style="font-family: 'Courier New';">Aa</div>
+                                <div class="personalizer-font-option" data-font="Georgia" style="font-family: Georgia;">Aa</div>
+                                <div class="personalizer-font-option" data-font="Verdana" style="font-family: Verdana;">Aa</div>
+                                <div class="personalizer-font-option" data-font="Impact" style="font-family: Impact;">Aa</div>
+                                <div class="personalizer-font-option" data-font="Comic Sans MS" style="font-family: 'Comic Sans MS';">Aa</div>
+                                <div class="personalizer-font-option" data-font="Trebuchet MS" style="font-family: 'Trebuchet MS';">Aa</div>
+                            </div>
+                        </div>
+
+                        <div class="personalizer-text-input-group">
+                            <label>Text Color:</label>
+                            <div class="personalizer-color-palette">
+                                <div class="personalizer-color-swatch active" style="background-color: #000000;" data-color="#000000"></div>
+                                <div class="personalizer-color-swatch" style="background-color: #ffffff; border-color: #333;" data-color="#ffffff"></div>
+                                <div class="personalizer-color-swatch" style="background-color: #ff0000;" data-color="#ff0000"></div>
+                                <div class="personalizer-color-swatch" style="background-color: #0000ff;" data-color="#0000ff"></div>
+                                <div class="personalizer-color-swatch" style="background-color: #008000;" data-color="#008000"></div>
+                                <div class="personalizer-color-swatch" style="background-color: #ffff00;" data-color="#ffff00"></div>
+                                <div class="personalizer-color-swatch" style="background-color: #ff00ff;" data-color="#ff00ff"></div>
+                                <div class="personalizer-color-swatch" style="background-color: #ffa500;" data-color="#ffa500"></div>
+                            </div>
+                        </div>
+
+                        <div class="personalizer-text-input-group">
+                            <label for="personalizer-fontSize">Font Size:</label>
+                            <select id="personalizer-fontSize">
+                                <option value="16">Small (16px)</option>
+                                <option value="20">Medium (20px)</option>
+                                <option value="24" selected>Large (24px)</option>
+                                <option value="32">X-Large (32px)</option>
+                                <option value="40">XX-Large (40px)</option>
+                            </select>
+                        </div>
+
+                        <button class="personalizer-add-text-btn" id="personalizer-addTextBtn">Add Text to Shirt</button>
+                    </div>
+                </div>
+                
+                <div class="personalizer-instructions">
+                    <h3>How to Use</h3>
+                    <ul>
+                        <li>Select a shirt color from the options above</li>
+                        <li>Click on an accessory type to see available options</li>
+                        <li>Click on a specific accessory to add it to your shirt</li>
+                        <li>Use the Upload button to add your own images</li>
+                        <li>Use Add Text to customize with text, fonts, and colors</li>
+                        <li>Text appears live on the shirt as you type and customize</li>
+                        <li>Drag accessories to position them as desired</li>
+                        <li>Hover over accessories to see controls for rotation, zoom, and deletion</li>
+                        <li>Use the Download Design button to save your creation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="personalizer-footer">
+            <p>Custom Shirt Designer &copy; 2023 | Drag and drop to customize your shirt</p>
+        </footer>
+    </div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const designCanvas = document.getElementById('personalizer-designCanvas');
+            const shirtBase = document.getElementById('personalizer-shirtBase');
+            const colorOptions = document.querySelectorAll('.personalizer-color-option');
+            const accessoryOptions = document.querySelectorAll('.personalizer-accessory-option');
+            const subOptions = document.querySelectorAll('.personalizer-sub-option');
+            const downloadButton = document.getElementById('personalizer-downloadDesign');
+            const resetButton = document.getElementById('personalizer-resetDesign');
+            const loadingIndicator = document.getElementById('personalizer-loadingIndicator');
+            const uploadButton = document.getElementById('personalizer-uploadAccessory');
+            const imageUpload = document.getElementById('personalizer-imageUpload');
+            const uploadedAccessories = document.getElementById('personalizer-uploadedAccessories');
+            const uploadedOptions = document.getElementById('personalizer-uploadedOptions');
+            
+            const addTextOption = document.getElementById('personalizer-addTextOption');
+            const textCustomization = document.getElementById('personalizer-textCustomization');
+            const textInput = document.getElementById('personalizer-textInput');
+            const fontSizeSelect = document.getElementById('personalizer-fontSize');
+            const addTextBtn = document.getElementById('personalizer-addTextBtn');
+            const fontOptions = document.querySelectorAll('.personalizer-font-option');
+            const colorSwatches = document.querySelectorAll('.personalizer-color-swatch');
+            const livePreviewText = document.getElementById('personalizer-livePreviewText');
+            
+            let accessories = [];
+            let activeAccessory = null;
+            let offsetX, offsetY;
+            let currentSubOptions = null;
+            let uploadedImages = [];
+            
+            let selectedFont = 'Arial';
+            let selectedColor = '#000000';
+            let selectedFontSize = '24';
+            let currentTextElement = null;
+
+            // Initialize text customization
+            function initializeTextCustomization() {
+                fontOptions.forEach(option => {
+                    if (option.classList.contains('active')) {
+                        selectedFont = option.getAttribute('data-font');
+                    }
+                });
+
+                colorSwatches.forEach(swatch => {
+                    if (swatch.classList.contains('active')) {
+                        selectedColor = swatch.getAttribute('data-color');
+                    }
+                });
+
+                selectedFontSize = fontSizeSelect.value;
+                updateLivePreview();
+            }
+
+            // Update live preview text
+            function updateLivePreview() {
+                const text = textInput.value.trim();
+                if (text) {
+                    livePreviewText.textContent = text;
+                    livePreviewText.style.fontFamily = selectedFont;
+                    livePreviewText.style.color = selectedColor;
+                    livePreviewText.style.fontSize = selectedFontSize + 'px';
+                    livePreviewText.classList.add('visible');
+                } else {
+                    livePreviewText.classList.remove('visible');
+                }
+            }
+
+            // Add text to canvas
+            function addTextToCanvas() {
+                const text = textInput.value.trim();
+                if (!text) {
+                    alert('Please enter some text');
+                    return;
+                }
+
+                const textContainer = document.createElement('div');
+                textContainer.className = 'personalizer-text-container';
+                
+                const textElement = document.createElement('div');
+                textElement.className = 'personalizer-text-element';
+                textElement.textContent = text;
+                textElement.style.fontFamily = selectedFont;
+                textElement.style.color = selectedColor;
+                textElement.style.fontSize = selectedFontSize + 'px';
+                
+                const controls = document.createElement('div');
+                controls.className = 'personalizer-text-controls';
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'personalizer-control-btn personalizer-delete-btn';
+                deleteBtn.innerHTML = '×';
+                deleteBtn.title = 'Delete text';
+                
+                const rotateLeftBtn = document.createElement('button');
+                rotateLeftBtn.className = 'personalizer-control-btn';
+                rotateLeftBtn.innerHTML = '↶';
+                rotateLeftBtn.title = 'Rotate left';
+                
+                const rotateRightBtn = document.createElement('button');
+                rotateRightBtn.className = 'personalizer-control-btn';
+                rotateRightBtn.innerHTML = '↷';
+                rotateRightBtn.title = 'Rotate right';
+                
+                controls.appendChild(deleteBtn);
+                controls.appendChild(rotateLeftBtn);
+                controls.appendChild(rotateRightBtn);
+                
+                textContainer.appendChild(textElement);
+                textContainer.appendChild(controls);
+                
+                const canvasRect = designCanvas.getBoundingClientRect();
+                const centerX = (canvasRect.width / 2) - 50;
+                const centerY = (canvasRect.height / 2) - 15;
+                
+                textContainer.style.left = `${centerX}px`;
+                textContainer.style.top = `${centerY}px`;
+                
+                // Add drag event listener to the entire text container
+                textContainer.addEventListener('mousedown', startDrag);
+                
+                deleteBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    designCanvas.removeChild(textContainer);
+                });
+                
+                let rotation = 0;
+                
+                rotateLeftBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    rotation -= 15;
+                    textContainer.style.transform = `rotate(${rotation}deg)`;
+                });
+                
+                rotateRightBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    rotation += 15;
+                    textContainer.style.transform = `rotate(${rotation}deg)`;
+                });
+                
+                designCanvas.appendChild(textContainer);
+                currentTextElement = textContainer;
+                
+                // Clear input and hide preview
+                textInput.value = '';
+                livePreviewText.classList.remove('visible');
+            }
+
+            // Initialize
+            initializeTextCustomization();
+            
+            function preloadImages() {
+                const images = document.querySelectorAll('img[src]');
+                const promises = Array.from(images).map(img => {
+                    return new Promise((resolve, reject) => {
+                        img.crossOrigin = 'anonymous';
+                        
+                        if (img.complete && img.naturalHeight !== 0) {
+                            resolve();
+                        } else {
+                            img.onload = () => resolve();
+                            img.onerror = () => {
+                                console.warn('Failed to load image:', img.src);
+                                resolve();
+                            };
+                            
+                            const src = img.src;
+                            img.src = '';
+                            img.src = src;
+                        }
+                    });
+                });
+                return Promise.all(promises);
+            }
+            
+            colorOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    colorOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    const newImageSrc = this.getAttribute('data-image');
+                    shirtBase.src = newImageSrc; 
+                });
+            });
+            
+            accessoryOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    if (type === 'upload') {
+                        imageUpload.click();
+                        return;
+                    }
+                    
+                    if (type === 'text') {
+                        textCustomization.classList.toggle('active');
+                        if (currentSubOptions) {
+                            currentSubOptions.classList.remove('active');
+                            currentSubOptions = null;
+                        }
+                        return;
+                    }
+                    
+                    if (currentSubOptions) {
+                        currentSubOptions.classList.remove('active');
+                    }
+                    
+                    const subOptionsId = `personalizer-${type}Options`;
+                    currentSubOptions = document.getElementById(subOptionsId);
+                    if (currentSubOptions) {
+                        currentSubOptions.classList.add('active');
+                    }
+                });
+            });
+            
+            uploadButton.addEventListener('click', function() {
+                imageUpload.click();
+            });
+            
+            imageUpload.addEventListener('change', function(e) {
+                const files = e.target.files;
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file.type.match('image.*')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const imageData = e.target.result;
+                            const imageId = 'uploaded-' + Date.now();
+                            uploadedImages.push({id: imageId, data: imageData});
+                            
+                            const uploadedOption = document.createElement('div');
+                            uploadedOption.className = 'personalizer-sub-option';
+                            uploadedOption.setAttribute('data-src', imageData);
+                            uploadedOption.setAttribute('data-type', 'uploaded');
+                            uploadedOption.setAttribute('data-id', imageId);
+                            
+                            const img = document.createElement('img');
+                            img.src = imageData;
+                            img.alt = 'Uploaded Accessory';
+                            img.style.width = '35px';
+                            img.style.height = '35px';
+                            img.style.objectFit = 'contain';
+                            
+                            const span = document.createElement('span');
+                            span.textContent = 'Custom';
+                            
+                            const removeBtn = document.createElement('button');
+                            removeBtn.className = 'personalizer-remove-upload-btn';
+                            removeBtn.innerHTML = '×';
+                            removeBtn.title = 'Remove from list';
+                            
+                            removeBtn.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                const optionId = uploadedOption.getAttribute('data-id');
+                                uploadedImages = uploadedImages.filter(img => img.id !== optionId);
+                                uploadedOption.remove();
+                                
+                                if (uploadedOptions.children.length === 0) {
+                                    uploadedAccessories.style.display = 'none';
+                                }
+                            });
+                            
+                            uploadedOption.appendChild(img);
+                            uploadedOption.appendChild(span);
+                            uploadedOption.appendChild(removeBtn);
+                            
+                            uploadedOption.addEventListener('click', function() {
+                                const src = this.getAttribute('data-src');
+                                const type = this.getAttribute('data-type');
+                                addAccessory(src, type);
+                                
+                                if (currentSubOptions) {
+                                    currentSubOptions.classList.remove('active');
+                                    currentSubOptions = null;
+                                }
+                            });
+                            
+                            uploadedOptions.appendChild(uploadedOption);
+                            uploadedAccessories.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+                imageUpload.value = '';
+            });
+            
+            // Real-time text preview events
+            textInput.addEventListener('input', updateLivePreview);
+            
+            fontSizeSelect.addEventListener('change', function() {
+                selectedFontSize = this.value;
+                updateLivePreview();
+            });
+
+            fontOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    fontOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedFont = this.getAttribute('data-font');
+                    updateLivePreview();
+                });
+            });
+
+            colorSwatches.forEach(swatch => {
+                swatch.addEventListener('click', function() {
+                    colorSwatches.forEach(s => s.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedColor = this.getAttribute('data-color');
+                    updateLivePreview();
+                });
+            });
+
+            // Add text on button click
+            addTextBtn.addEventListener('click', addTextToCanvas);
+
+            // Add text on Enter key
+            textInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTextToCanvas();
+                }
+            });
+            
+            subOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const src = this.getAttribute('data-src');
+                    const type = this.getAttribute('data-type');
+                    addAccessory(src, type);
+                    
+                    if (currentSubOptions) {
+                        currentSubOptions.classList.remove('active');
+                        currentSubOptions = null;
+                    }
+                });
+            });
+            
+            function addAccessory(src, type) {
+                const accessoryContainer = document.createElement('div');
+                accessoryContainer.className = 'personalizer-accessory-container';
+                
+                const accessory = document.createElement('img');
+                accessory.className = 'personalizer-accessory';
+                accessory.setAttribute('data-type', type);
+                accessory.src = src;
+                accessory.alt = type;
+                accessory.crossOrigin = 'anonymous';
+                
+                const controls = document.createElement('div');
+                controls.className = 'personalizer-accessory-controls';
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'personalizer-control-btn personalizer-delete-btn';
+                deleteBtn.innerHTML = '×';
+                deleteBtn.title = 'Delete accessory';
+                
+                const rotateLeftBtn = document.createElement('button');
+                rotateLeftBtn.className = 'personalizer-control-btn';
+                rotateLeftBtn.innerHTML = '↶';
+                rotateLeftBtn.title = 'Rotate left';
+                
+                const rotateRightBtn = document.createElement('button');
+                rotateRightBtn.className = 'personalizer-control-btn';
+                rotateRightBtn.innerHTML = '↷';
+                rotateRightBtn.title = 'Rotate right';
+                
+                const zoomInBtn = document.createElement('button');
+                zoomInBtn.className = 'personalizer-control-btn';
+                zoomInBtn.innerHTML = '+';
+                zoomInBtn.title = 'Zoom in';
+                
+                const zoomOutBtn = document.createElement('button');
+                zoomOutBtn.className = 'personalizer-control-btn';
+                zoomOutBtn.innerHTML = '−';
+                zoomOutBtn.title = 'Zoom out';
+                
+                controls.appendChild(deleteBtn);
+                controls.appendChild(rotateLeftBtn);
+                controls.appendChild(rotateRightBtn);
+                controls.appendChild(zoomInBtn);
+                controls.appendChild(zoomOutBtn);
+                
+                accessoryContainer.appendChild(accessory);
+                accessoryContainer.appendChild(controls);
+                
+                let width, height;
+                switch(type) {
+                    case 'tie':
+                        width = 80;
+                        height = 120;
+                        break;
+                    case 'pocket':
+                        width = 70;
+                        height = 70;
+                        break;
+                    default:
+                        width = 80;
+                        height = 80;
+                }
+                
+                accessoryContainer.style.width = `${width}px`;
+                accessoryContainer.style.height = `${height}px`;
+                
+                const canvasRect = designCanvas.getBoundingClientRect();
+                const centerX = (canvasRect.width / 2) - (width / 2);
+                const centerY = (canvasRect.height / 2) - (height / 2);
+                
+                accessoryContainer.style.left = `${centerX}px`;
+                accessoryContainer.style.top = `${centerY}px`;
+                
+                accessory.addEventListener('mousedown', startDrag);
+                
+                deleteBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    designCanvas.removeChild(accessoryContainer);
+                    accessories = accessories.filter(a => a.container !== accessoryContainer);
+                });
+                
+                let rotation = 0;
+                let scale = 1;
+                
+                rotateLeftBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    rotation -= 15;
+                    accessoryContainer.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+                });
+                
+                rotateRightBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    rotation += 15;
+                    accessoryContainer.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+                });
+                
+                zoomInBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    scale *= 1.1;
+                    accessoryContainer.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+                });
+                
+                zoomOutBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    scale /= 1.1;
+                    accessoryContainer.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+                });
+                
+                designCanvas.appendChild(accessoryContainer);
+                accessories.push({
+                    container: accessoryContainer,
+                    element: accessory,
+                    type: type,
+                    src: src,
+                    x: centerX,
+                    y: centerY,
+                    width: width,
+                    height: height,
+                    rotation: rotation,
+                    scale: scale
+                });
+            }
+            
+            // FIXED DRAG FUNCTIONALITY
+            function startDrag(e) {
+                // Prevent dragging when clicking on control buttons
+                if (e.target.classList.contains('personalizer-control-btn')) {
+                    return;
+                }
+                
+                activeAccessory = e.target.closest('.personalizer-accessory-container') || e.target.closest('.personalizer-text-container');
+                if (!activeAccessory) return;
+                
+                const rect = activeAccessory.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                
+                document.addEventListener('mousemove', onDrag);
+                document.addEventListener('mouseup', stopDrag);
+                
+                e.preventDefault();
+            }
+            
+            function onDrag(e) {
+                if (!activeAccessory) return;
+                
+                const canvasRect = designCanvas.getBoundingClientRect();
+                
+                let newX = e.clientX - canvasRect.left - offsetX;
+                let newY = e.clientY - canvasRect.top - offsetY;
+                
+                const accessoryWidth = activeAccessory.offsetWidth;
+                const accessoryHeight = activeAccessory.offsetHeight;
+                
+                newX = Math.max(0, Math.min(newX, canvasRect.width - accessoryWidth));
+                newY = Math.max(0, Math.min(newY, canvasRect.height - accessoryHeight));
+                
+                activeAccessory.style.left = `${newX}px`;
+                activeAccessory.style.top = `${newY}px`;
+            }
+            
+            function stopDrag() {
+                activeAccessory = null;
+                document.removeEventListener('mousemove', onDrag);
+                document.removeEventListener('mouseup', stopDrag);
+            }
+            
+            downloadButton.addEventListener('click', function() {
+                loadingIndicator.style.display = 'flex';
+                
+                setTimeout(() => {
+                    preloadImages().then(() => {
+                        html2canvas(designCanvas, {
+                            useCORS: true,
+                            allowTaint: false,
+                            scale: 2,
+                            logging: false,
+                            backgroundColor: '#f9f9f9',
+                            removeContainer: false,
+                            foreignObjectRendering: false,
+                        }).then(canvas => {
+                            const image = canvas.toDataURL('image/png');
+                            const link = document.createElement('a');
+                            link.download = 'custom-shirt-design.png';
+                            link.href = image;
+                            
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            
+                            loadingIndicator.style.display = 'none';
+                        }).catch(error => {
+                            console.error('Error generating image:', error);
+                            alert('Error generating image. Please try again.');
+                            loadingIndicator.style.display = 'none';
+                        });
+                    });
+                }, 1000);
+            });
+            
+            resetButton.addEventListener('click', function() {
+                if (confirm('Are you sure you want to reset your design? All accessories and text will be removed.')) {
+                    const elements = designCanvas.querySelectorAll('.personalizer-accessory-container, .personalizer-text-container');
+                    elements.forEach(element => {
+                        designCanvas.removeChild(element);
+                    });
+                    accessories = [];
+                    
+                    colorOptions.forEach(opt => opt.classList.remove('active'));
+                    colorOptions[0].classList.add('active');
+                    shirtBase.src = './white.png';
+                    
+                    if (currentSubOptions) {
+                        currentSubOptions.classList.remove('active');
+                        currentSubOptions = null;
+                    }
+                    
+                    textCustomization.classList.remove('active');
+                    textInput.value = '';
+                    livePreviewText.classList.remove('visible');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
